@@ -1,35 +1,86 @@
+/* book.css */
+
+/* Estilo general para el cuerpo */
 body {
-    padding-top: 0;
-  }
-  
-  .nav-pills .nav-link {
-    color: white;
-  }
-  
-  .nav-pills .nav-link.active {
-    background-color: rgba(255, 255, 255, 0.15);
-  }
-  
-  #viewerCanvas {
-    margin-top: 2rem;
-  }
-  /* Estilos para los botones */
-.mt-3 {
-    margin-top: 20px; /* Espacio superior */
-    text-align: center; /* Centrar horizontalmente */
-  }
-  
-  .mt-3 button {
-    margin-right: 10px; /* Espacio entre botones */
-    padding: 8px 12px; /* Espaciado interno */
-    background-color: #007bff; /* Color de fondo */
-    color: #fff; /* Color del texto */
-    border: none; /* Sin borde */
-    border-radius: 5px; /* Bordes redondeados */
-    cursor: pointer; /* Cursor apuntador */
-  }
-  
-  .mt-3 button:hover {
-    background-color: #0056b3; /* Color de fondo al pasar el ratón */
-  }
-  
+  background-image: url("../img/fondo4.jpg");
+  background-size: cover;
+  background-position: center;
+  font-family: Arial, sans-serif;
+}
+
+/* Contenedor principal del lector */
+.book-container {
+  width: 100%;
+  max-width: 600px;
+  height: 400px;
+  margin: auto;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #ffffff;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Modo nocturno */
+.night-mode {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+/* Botones de navegación */
+button {
+  margin: 5px;
+}
+
+.navigation-buttons {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+}
+
+.navigation-buttons button {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.navigation-buttons button:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Barra de progreso */
+.progress {
+  height: 20px;
+  margin-top: 10px;
+}
+
+.progress-bar {
+  width: 0%;
+}
+
+/* Estilos para configuraciones de texto */
+#fontSize, #fontFamily, #backgroundColor {
+  margin: 10px 0;
+}
+
+/* Marcadores y notas */
+#notes {
+  width: 100%;
+  height: 100px;
+  margin-top: 10px;
+}
+
+/* Buscar en el libro */
+#searchText {
+  margin-top: 10px;
+}
+
+#searchButton {
+  margin-top: 5px;
+}

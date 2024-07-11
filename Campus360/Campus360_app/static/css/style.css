@@ -13,7 +13,7 @@
 body {
   margin: 0;
   padding: 0;
-  background-image: url('/static/img/fondo4.jpg');
+  background-image: url('/static/img/img7.jpg');
 
   background-size: cover;
   background-position: center;
@@ -75,7 +75,7 @@ li {
 
 /* Estilo para las imágenes */
 .img-servicio {
-  width: 180px;
+  width: 100px;
   height: 160px;
   object-fit: cover;
   border-color: #000;
@@ -85,9 +85,90 @@ li {
   justify-content: flex-start;
   background-color: #a2b8f0;
   padding-top: 5rem;
-    text-align: center;
+  text-align: center;
 
-  
+}
 
+/* Estilo general para la sección del equipo */
+.team-section {
+  background-color: #f8f9fa;
+  padding: 60px 0;
+}
 
+.team-section h2 {
+  font-size: 36px;
+  text-align: center;
+  margin-bottom: 40px;
+  color: #333;
+  font-weight: 700;
+}
+
+.team-section .subtext h3 {
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 30px;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* Estilo para los contenedores de cada miembro del equipo */
+.team-box {
+  background: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  margin-bottom: 30px;
+}
+
+.team-box:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.team-box .user img {
+  border-radius: 50%;
+  max-width: 150px;
+  margin: 0 auto 20px;
+}
+
+.team-box h3 {
+  font-size: 24px;
+  margin: 10px 0;
+  color: #333;
+  font-weight: 600;
+}
+
+.team-box .position {
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 20px;
+}
+
+.team-box p {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+/* Estilo para los íconos de redes sociales */
+.team-box .social-media {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.team-box .social-media li {
+  display: inline-block;
+  margin: 0 10px;
+}
+
+.team-box .social-media li a {
+  color: #999;
+  font-size: 18px;
+  transition: all 0.3s ease-in-out;
+}
+
+.team-box .social-media li a:hover {
+  color: #333;
 }

@@ -22,7 +22,7 @@
   </script>    
         <style>
           body {
-            background-image: url('fondo4.jpg');
+            background-image: url("{% static 'img/fondo4.jpg' %}");
             background-size: cover;
             background-position: center;
           }
@@ -98,6 +98,7 @@
   <div class="text-center" id="viewerCanvas" style="width: 100%; height: 600px;"></div>
 </div>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"/>   
-<link rel="stylesheet" href="/Campus360/Campus360_app/static/css/book.css"/>
+<link rel="stylesheet" href="{% static 'css/book.css' %}"/>   
+
 </body>
 </html>
