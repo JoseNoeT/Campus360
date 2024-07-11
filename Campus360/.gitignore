@@ -40,3 +40,9 @@ Campus360_app/static/img/*.mp4
 
 # Ignorar directorios específicos
 ../Entorno360/Lib/site-packages/
+
+
+# Ignorar archivos pyc en el entorno virtual
+Entorno360/Lib/site-packages/**/*.pyc
+
+*.pyc
