@@ -37,19 +37,32 @@ $(document).ready(function(){
         }
     });
 
-    function saveUser(){
+    function saveUser() {
         var username = $('#username').val();
         var email = $('#email').val();
         var password = $('#password').val();
-        var user = {username, email, password};
-        saveUserToStorage(user);
+    
+        var user = {
+            username: username,
+            email: email,
+            password: password
+        };
+    
+        fetch('/api/registro/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(user),
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Usuario creado con éxito');
+            console.log(data); // Puedes mostrar la respuesta del servidor si lo deseas
+        })
+        .catch(error => {
+            console.error('Error al crear usuario:', error);
+            alert('Ocurrió un error al crear el usuario');
+        });
     }
-
-    function saveUserToStorage(user){
-        var users = localStorage.getItem('users') ? JSON.parse(localStorage.getItem('users')) : [];
-        users.push(user);
-        localStorage.setItem('users', JSON.stringify(users));
-        alert('Usuario creado con éxito');
-        console.log(localStorage.getItem('users'));
-    }
-});
+    

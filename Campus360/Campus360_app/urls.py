@@ -26,5 +26,6 @@ urlpatterns = [
     path('registro/', views.registro, name='registro'),
     path('admin_view/', views.admin_view, name='admin_view'),  # Cambiado para evitar conflictos
     path('api/libros/', views.lista_libros, name='lista_libros'),  # Endpoint de la API para listar libros
+    path('book/', views.book_view, name='book'), 
 ]
 

@@ -72,7 +72,7 @@ def admin_view(request):
     return render(request, 'Campus360_app/admin.html')
 
 def book_view(request):
-    return render(request, 'book.html')
+    return render(request, 'Campus360_app/book.html')
 
 # Vistas para la API REST
 
@@ -181,3 +181,4 @@ def mostrar_libros_api(request):
     except requests.exceptions.RequestException as e:
         # Manejo de excepciones generales de solicitud
         return render(request, 'tu_app/error.html', {'mensaje': f'Error de conexión: {str(e)}'})
+
