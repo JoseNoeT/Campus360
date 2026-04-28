@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Virtual environments
+.venv/
+venv/
+env/
+Entorno360/
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Environment variables
+.env
+.env.local
+.env.dev
+.env.prod
+
+# Static / media generated locally
+staticfiles/
+media/
+
+# Migrations cache
+**/__pycache__/
+
+# VS Code
+.vscode/
+.history/
+
+# PyCharm
+.idea/
+
+# Windows
+Thumbs.db
+Desktop.ini
+desktop.ini
+
+# macOS
+.DS_Store
+
+# Node / frontend if exists
+node_modules/
+dist/
+build/
+
+# Coverage / tests
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp

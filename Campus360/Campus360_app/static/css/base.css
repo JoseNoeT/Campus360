@@ -1,0 +1,38 @@
+:root {
+    --font-main: 'Montserrat', sans-serif;
+    --color-bg: #f3f5fb;
+    --color-surface: #ffffff;
+    --color-text: #1f2937;
+    --color-muted: #6b7280;
+    --color-primary: #0e7490;
+    --color-primary-dark: #0b5f77;
+    --color-border: #dbe3ec;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+    --shadow-sm: 0 8px 22px rgba(15, 23, 42, 0.08);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-main);
+    color: var(--color-text);
+    background: radial-gradient(circle at top, #e9f2ff 0%, var(--color-bg) 45%);
+}
+
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--color-primary-dark);
+}

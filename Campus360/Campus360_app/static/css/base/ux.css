@@ -1,0 +1,234 @@
+/* ============================================
+   CAMPUS360 — UX ENHANCEMENTS
+   Based on 13 UX/UI Laws
+
+   1.  Fitts         → large touch targets
+   2.  Hick          → clear visual hierarchy
+   3.  Jakob         → consistent patterns
+   4.  Prägnanz      → simplicity, clean lines
+   5.  Proximity     → grouped spacing
+   6.  Miller        → chunked content
+   7.  Aesthetic     → smooth, polished feel
+   8.  Doherty       → fast feedback < 400ms
+   9.  Peak-End      → strong hero + footer
+   10. Feedback      → all interactives respond
+   11. Serial Pos.   → logo left, CTA right
+   12. Common Region → cards group content
+   13. Connectedness → uniform color + shape
+   ============================================ */
+
+/* ---- LAW 1: Fitts — minimum touch targets (WCAG 2.5.5) ---- */
+.btn,
+.nav-link,
+.navbar-toggler,
+[role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+/* ---- LAW 8 + 10: Doherty + Feedback — fast tactile response ---- */
+.btn {
+    transition: background-color var(--transition-base),
+                border-color var(--transition-base),
+                color var(--transition-base),
+                box-shadow var(--transition-base),
+                transform 0.1s ease;
+    cursor: pointer;
+}
+
+.btn:hover {
+    box-shadow: var(--shadow-hover);
+}
+
+.btn:active {
+    transform: scale(0.97);
+}
+
+/* ---- LAW 10: Feedback — visible focus ring for keyboard nav ---- */
+:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+}
+
+a:focus-visible {
+    border-radius: 3px;
+}
+
+/* ---- LAW 13: Connectedness — consistent form focus ---- */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-focus);
+    outline: none;
+}
+
+/* ---- LAW 10: Feedback — nav active state ---- */
+.app-navbar .nav-link.active,
+.app-navbar .nav-link[aria-current="page"] {
+    color: var(--color-nav-link-hover);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+/* ---- LAW 2: Hick — visual hierarchy with heading sizes ---- */
+.page-title {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.page-subtitle {
+    font-size: var(--text-base);
+    color: var(--color-muted);
+    line-height: 1.7;
+}
+
+/* ---- LAW 5: Proximity — section spacing ---- */
+.section + .section {
+    margin-top: var(--space-lg);
+}
+
+/* ---- LAW 4: Prägnanz — clean card content ---- */
+.feature-card p,
+.auth-card p,
+.book-card p {
+    color: var(--color-muted);
+    line-height: 1.65;
+}
+
+.feature-card h2,
+.auth-card h1,
+.auth-card h2 {
+    color: var(--color-text);
+}
+
+/* ---- LAW 7: Aesthetic — smooth surface transitions ---- */
+.feature-card,
+.book-card,
+.auth-card,
+.cart-panel {
+    transition: box-shadow var(--transition-base),
+                background-color 0.25s ease,
+                border-color 0.25s ease;
+}
+
+/* ---- LAW 9: Peak-End — hero impact ---- */
+.hero-panel {
+    transition: background var(--transition-theme);
+}
+
+.hero-panel h1 {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: -0.02em;
+}
+
+.hero-panel .lead {
+    color: var(--color-muted);
+    max-width: 560px;
+    margin-inline: auto;
+}
+
+/* ---- LAW 12: Common Region — catalog items grouped ---- */
+.catalog-grid > * {
+    height: 100%;
+}
+
+/* ---- LAW 6: Miller — cart items chunked ---- */
+.carrito-item + .carrito-item {
+    border-top: 1px solid var(--color-border);
+}
+
+/* ---- LAW 3: Jakob — skip-to-content for accessibility ---- */
+.skip-link {
+    position: absolute;
+    top: -100%;
+    left: var(--space-sm);
+    background: var(--color-primary);
+    color: #fff;
+    padding: 0.5em 1em;
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    font-size: var(--text-sm);
+    z-index: 9999;
+    transition: top 0.2s;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* ---- Dark mode surface text pass-through ---- */
+[data-theme="dark"] .feature-card p,
+[data-theme="dark"] .auth-card p,
+[data-theme="dark"] .book-card p,
+[data-theme="dark"] .hero-panel .lead {
+    color: var(--color-muted);
+}
+
+[data-theme="dark"] .feature-card h2,
+[data-theme="dark"] .hero-panel h1,
+[data-theme="dark"] .hero-panel h2,
+[data-theme="dark"] .auth-card h1 {
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .carrito-total strong {
+    color: var(--color-text);
+}
+
+/* ============================================
+   UI STATE COMPONENTS (loading / error / empty)
+   Used by js/components/ui-states.js
+   ============================================ */
+.ui-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    padding: var(--space-xl) var(--space-md);
+    text-align: center;
+    color: var(--color-muted);
+    min-height: 160px;
+}
+
+.ui-state__icon {
+    font-size: 2.5rem;
+    line-height: 1;
+}
+
+.ui-state__msg {
+    font-size: var(--text-sm);
+    margin: 0;
+    max-width: 320px;
+}
+
+/* --- Loading spinner (CSS-only) --- */
+.ui-state__spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--color-border);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: block;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* --- Error variant --- */
+.ui-state--error .ui-state__msg {
+    color: var(--color-danger);
+}
+
+/* --- Retry button --- */
+.ui-state__retry {
+    margin-top: var(--space-xs);
+}

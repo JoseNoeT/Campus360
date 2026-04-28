@@ -1,0 +1,142 @@
+
+{% extends 'Campus360_app/base/base.html' %}
+{% load static %}
+
+{% block title %}Catálogo | Campus360{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/pages/catalog.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb y encabezado -->
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb bg-transparent p-0 mb-0">
+        <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Catálogo</li>
+    </ol>
+</nav>
+<section class="catalog-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <div>
+        <h1 class="h2 mb-1">Catálogo de libros</h1>
+        <p class="text-muted mb-2">Explora títulos académicos, filtra por categoría y agrega tus libros favoritos al carrito.</p>
+        <span class="badge bg-primary-subtle text-primary-emphasis catalog-count" id="catalog-count" style="font-size:1rem;">Libros disponibles: <span id="catalog-count-value">—</span></span>
+    </div>
+</section>
+
+<!-- Barra de beneficios rápidos -->
+<section class="catalog-benefits row row-cols-2 row-cols-md-4 g-3 mb-4">
+    <div class="col">
+        <div class="benefit-card card h-100 text-center p-3">
+            <div class="benefit-icon mb-2" aria-hidden="true">📚</div>
+            <h3 class="h6 mb-1">Catálogo académico</h3>
+            <p class="small text-muted mb-0">Libros seleccionados para tu formación.</p>
+        </div>
+    </div>
+    <div class="col">
+        <div class="benefit-card card h-100 text-center p-3">
+            <div class="benefit-icon mb-2" aria-hidden="true">⚡</div>
+            <h3 class="h6 mb-1">Compra rápida</h3>
+            <p class="small text-muted mb-0">Agrega y paga en pocos pasos.</p>
+        </div>
+    </div>
+    <div class="col">
+        <div class="benefit-card card h-100 text-center p-3">
+            <div class="benefit-icon mb-2" aria-hidden="true">🔒</div>
+            <h3 class="h6 mb-1">Plataforma segura</h3>
+            <p class="small text-muted mb-0">Tus datos y pagos protegidos.</p>
+        </div>
+    </div>
+    <div class="col">
+        <div class="benefit-card card h-100 text-center p-3">
+            <div class="benefit-icon mb-2" aria-hidden="true">🌟</div>
+            <h3 class="h6 mb-1">Recomendaciones</h3>
+            <p class="small text-muted mb-0">Descubre títulos destacados.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Filtros -->
+<section class="catalog-toolbar card p-3 mb-4">
+    <form class="row g-2 align-items-end" id="catalog-filters" autocomplete="off" onsubmit="return false;">
+        <div class="col-12 col-md-4">
+            <label for="catalog-search" class="form-label visually-hidden">Buscar libro</label>
+            <input id="catalog-search" type="search" class="form-control catalog-search" placeholder="Buscar por título o autor" data-action="search" />
+        </div>
+        <div class="col-6 col-md-2">
+            <select id="catalog-genero" class="form-select catalog-filter" data-action="filter">
+                <option value="">Todos los géneros</option>
+            </select>
+        </div>
+        <div class="col-6 col-md-2">
+            <select id="catalog-ordering" class="form-select catalog-filter" data-action="sort">
+                <option value="">Ordenar por</option>
+                <option value="precio">Precio (menor a mayor)</option>
+                <option value="-precio">Precio (mayor a menor)</option>
+                <option value="titulo">Título (A-Z)</option>
+            </select>
+        </div>
+        <div class="col-6 col-md-2">
+            <input id="catalog-min" type="number" class="form-control catalog-filter" placeholder="Precio mínimo" min="0" />
+        </div>
+        <div class="col-6 col-md-2">
+            <input id="catalog-max" type="number" class="form-control catalog-filter" placeholder="Precio máximo" min="0" />
+        </div>
+        <div class="col-12 col-md-auto d-flex gap-2 catalog-filter-actions mt-2 mt-md-0">
+            <button type="button" class="btn btn-outline-secondary btn-sm" id="catalog-clear">Limpiar filtros</button>
+            <button type="button" class="btn btn-accent btn-sm" id="catalog-apply">Aplicar filtros</button>
+        </div>
+    </form>
+</section>
+
+<!-- Categorías destacadas -->
+<section class="catalog-categories mb-4">
+    <div id="catalog-categories-list" class="d-flex flex-wrap gap-2">
+        <button class="category-chip" data-category="Programación" type="button" aria-label="Filtrar por Programación">💻 Programación</button>
+        <button class="category-chip" data-category="Matemáticas" type="button" aria-label="Filtrar por Matemáticas">📐 Matemáticas</button>
+        <button class="category-chip" data-category="Ciencias" type="button" aria-label="Filtrar por Ciencias">🔬 Ciencias</button>
+        <button class="category-chip" data-category="Historia" type="button" aria-label="Filtrar por Historia">🏺 Historia</button>
+        <button class="category-chip" data-category="Literatura" type="button" aria-label="Filtrar por Literatura">📖 Literatura</button>
+        <button class="category-chip" data-category="Ingeniería" type="button" aria-label="Filtrar por Ingeniería">🛠️ Ingeniería</button>
+    </div>
+</section>
+
+<!-- Estados visuales (loading, error, vacío) -->
+<div id="catalog-state"></div>
+
+<!-- Grilla de libros -->
+<section class="catalog-content row g-3 mb-4">
+    <div id="catalog-grid" class="catalog-grid"></div>
+    <div id="catalog-pagination" class="catalog-pagination mt-3"></div>
+</section>
+
+<!-- Carrito sticky lateral -->
+<aside class="catalog-cart-panel cart-panel sticky-top" id="carrito" aria-label="Tu carrito de compras">
+    <div class="header-carrito">
+        <h2 class="h5 mb-0">Tu carrito</h2>
+    </div>
+    <div id="cart-announcer" aria-live="polite" aria-atomic="true" class="visually-hidden"></div>
+    <div id="cart-feedback" class="cart-feedback" role="status" aria-live="polite" hidden></div>
+    <div id="cart-items" class="carrito-items" role="list" aria-label="Libros en el carrito"></div>
+    <div class="carrito-total mt-3">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <strong>Total</strong>
+            <span class="carrito-precio-total" aria-live="polite">$0</span>
+        </div>
+        <button id="cart-checkout" class="btn btn-accent w-100 btn-pagar" type="button" aria-label="Finalizar compra">Finalizar compra</button>
+        <button class="btn btn-outline-secondary w-100 mt-2" type="button" id="cart-continue-shopping" style="display:none;">Seguir comprando</button>
+    </div>
+    <div class="cart-empty-message text-center text-muted mt-3" style="display:none;">Tu carrito está vacío</div>
+</aside>
+
+<!-- Sección de destacados/novedades -->
+<section class="catalog-featured mb-5">
+    <h2 class="h4 mb-3">Libros destacados</h2>
+    <div id="catalog-featured" class="row g-3"></div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{% static 'js/pages/catalog.js' %}"></script>
+{% endblock %}

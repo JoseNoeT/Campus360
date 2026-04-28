@@ -1,0 +1,44 @@
+{% extends 'Campus360_app/base/base.html' %}
+{% load static %}
+
+{% block title %}Registro | Campus360{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/pages/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-wrapper">
+    <article class="auth-card">
+        <h1 class="h4 mb-3">Crear cuenta</h1>
+        {% if register_errors %}
+            <div class="alert alert-danger" role="alert">
+                {% for field, errors in register_errors.items %}
+                    <div>{{ field }}: {{ errors|join:", " }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <form method="post" novalidate>
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" id="nombre" name="nombre" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="apellido" class="form-label">Apellido</label>
+                <input type="text" id="apellido" name="apellido" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Correo</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            <button class="btn btn-accent w-100" type="submit">Crear cuenta</button>
+        </form>
+        <p class="small text-muted mt-3 mb-0">¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión</a></p>
+    </article>
+</section>
+{% endblock %}
