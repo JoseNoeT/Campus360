@@ -1,24 +1,55 @@
+
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
-
-# Create your models here.
-
-#myapp/models.py
-
-from django.db import models
-from django.contrib.auth.models import User  # Importar User si es necesario
-from django.urls import path, include  
+import uuid
 
 
-class Usuario(models.Model):
-    id_usuario = models.CharField(max_length=50, primary_key=True, null=False)
-    tipo_usuario = models.CharField(max_length=50)
-    nombre = models.CharField(max_length=50)
-    apellido = models.CharField(max_length=50)
-    correo = models.CharField(max_length=50)
-    contrasena = models.CharField(max_length=50)  # Considerar models.PasswordField()
+class UsuarioManager(UserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError("El email es obligatorio")
+
+        email = self.normalize_email(email)
+        username = extra_fields.get("username") or email.split("@")[0]
+        extra_fields["username"] = username
+
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("is_active", True)
+
+        if extra_fields.get("is_staff") is not True:
+            raise ValueError("Superuser must have is_staff=True.")
+        if extra_fields.get("is_superuser") is not True:
+            raise ValueError("Superuser must have is_superuser=True.")
+
+        return self.create_user(email, password, **extra_fields)
+
+
+class Usuario(AbstractUser):
+    class Roles(models.TextChoices):
+        ADMIN = "ADMIN", "Admin"
+        DOCENTE = "DOCENTE", "Docente"
+        ALUMNO = "ALUMNO", "Alumno"
+
+    id_usuario = models.CharField(max_length=50, primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(default=uuid.uuid4, unique=True, editable=False, db_index=True)
+    username = models.CharField(max_length=150, blank=True, null=True)
+    email = models.EmailField(unique=True)
+    role = models.CharField(max_length=20, choices=Roles.choices, default=Roles.ALUMNO)
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
+
+    objects = UsuarioManager()
 
     def __str__(self):
-        return f"{self.id_usuario} {self.tipo_usuario} {self.nombre} {self.apellido}"
+        return self.email
 
 class Libro(models.Model):
     isbn = models.CharField(max_length=13, primary_key=True, null=False)
@@ -28,6 +59,7 @@ class Libro(models.Model):
     anio = models.IntegerField()
     genero = models.CharField(max_length=50)
     precio = models.IntegerField()
+    stock = models.PositiveIntegerField(default=10)
     imagen = models.URLField(max_length=200)
 
     def __str__(self):

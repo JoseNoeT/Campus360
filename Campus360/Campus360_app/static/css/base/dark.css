@@ -1,0 +1,135 @@
+/* ============================================
+   CAMPUS360 — DARK MODE BOOTSTRAP OVERRIDES
+   Forces Bootstrap's hardcoded colors to follow
+   our CSS variables in [data-theme="dark"].
+   ============================================ */
+
+/* --- Bootstrap root vars override --- */
+[data-theme="dark"] {
+    --bs-body-color:       var(--color-text);
+    --bs-body-bg:          var(--color-bg);
+    --bs-secondary-color:  var(--color-muted);
+    --bs-border-color:     var(--color-border);
+    --bs-link-color:       var(--color-primary);
+    --bs-link-hover-color: var(--color-primary-dark);
+}
+
+/* --- Text utilities --- */
+[data-theme="dark"] .text-muted,
+[data-theme="dark"] .text-secondary {
+    color: var(--color-muted) !important;
+}
+
+[data-theme="dark"] .text-dark {
+    color: var(--color-text) !important;
+}
+
+[data-theme="dark"] .text-body {
+    color: var(--color-text) !important;
+}
+
+[data-theme="dark"] small,
+[data-theme="dark"] .small {
+    color: var(--color-muted);
+}
+
+/* --- Form controls --- */
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select {
+    background-color: var(--color-surface-2);
+    border-color: var(--color-border);
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .form-control::placeholder {
+    color: var(--color-muted);
+    opacity: 1;
+}
+
+[data-theme="dark"] .form-control:focus,
+[data-theme="dark"] .form-select:focus {
+    background-color: var(--color-surface-2);
+    border-color: var(--color-primary);
+    color: var(--color-text);
+    box-shadow: var(--shadow-focus);
+}
+
+[data-theme="dark"] .form-label {
+    color: var(--color-text);
+}
+
+/* --- Bootstrap cards (not our cards, native Bootstrap) --- */
+[data-theme="dark"] .card {
+    background-color: var(--color-surface);
+    border-color: var(--color-border);
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .card-body,
+[data-theme="dark"] .card-title,
+[data-theme="dark"] .card-text {
+    color: var(--color-text);
+}
+
+/* --- Buttons outline variants --- */
+[data-theme="dark"] .btn-outline-secondary {
+    color: var(--color-muted);
+    border-color: var(--color-border-strong);
+}
+
+[data-theme="dark"] .btn-outline-secondary:hover {
+    background-color: var(--color-surface-2);
+    color: var(--color-text);
+    border-color: var(--color-border-strong);
+}
+
+[data-theme="dark"] .btn-outline-danger {
+    color: #f87171;
+    border-color: #f87171;
+}
+
+/* --- Headings and paragraphs fallback --- */
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6 {
+    color: var(--color-text);
+}
+
+[data-theme="dark"] p {
+    color: var(--color-text);
+}
+
+/* --- Lead text --- */
+[data-theme="dark"] .lead {
+    color: var(--color-text);
+}
+
+/* --- Strong and semibold text --- */
+[data-theme="dark"] strong,
+[data-theme="dark"] .fw-semibold,
+[data-theme="dark"] .fw-bold {
+    color: var(--color-text);
+}
+
+/* --- hr divider --- */
+[data-theme="dark"] hr {
+    border-color: var(--color-border);
+    opacity: 1;
+}
+
+/* --- Input groups --- */
+[data-theme="dark"] .input-group-text {
+    background-color: var(--color-surface-2);
+    border-color: var(--color-border);
+    color: var(--color-muted);
+}
+
+/* --- List groups --- */
+[data-theme="dark"] .list-group-item {
+    background-color: var(--color-surface);
+    border-color: var(--color-border);
+    color: var(--color-text);
+}

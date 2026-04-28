@@ -1,0 +1,29 @@
+{% extends 'Campus360_app/base/base.html' %}
+{% load static %}
+
+{% block title %}Lector360 | Campus360{% endblock %}
+
+{% block content %}
+<section>
+    <h1 class="h3 mb-4">Lector360</h1>
+    <div class="auth-card p-0" style="overflow:hidden;">
+        <div id="viewerCanvas" style="width:100%;height:680px;"></div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://www.google.com/books/jsapi.js"></script>
+<script type="text/javascript">
+    google.books.load();
+    function initialize() {
+        var viewer = new google.books.DefaultViewer(document.getElementById('viewerCanvas'));
+        var index = document.URL.indexOf('?');
+        if (index > 0) {
+            var bookIsbn = document.URL.substring(index, document.URL.length).split("=")[1];
+            viewer.load('ISBN:' + bookIsbn);
+        }
+    }
+    google.books.setOnLoadCallback(initialize);
+</script>
+{% endblock %}

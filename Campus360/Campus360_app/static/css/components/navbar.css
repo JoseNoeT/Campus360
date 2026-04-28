@@ -1,0 +1,102 @@
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: var(--color-nav-bg);
+    box-shadow: var(--shadow-sm);
+    border-bottom: 1px solid var(--color-border);
+    transition: box-shadow var(--transition-base), background-color var(--transition-theme), border-color var(--transition-theme);
+}
+
+[data-theme="light"] .site-header,
+[data-theme="light"] .site-header .app-navbar {
+    background-color: var(--color-nav-bg) !important;
+}
+
+[data-theme="dark"] .site-header,
+[data-theme="dark"] .site-header .app-navbar {
+    background-color: var(--color-nav-bg) !important;
+}
+
+.site-header .app-navbar {
+    background-color: var(--color-nav-bg);
+    min-height: 64px;
+    padding-top: 0.65rem;
+    padding-bottom: 0.65rem;
+}
+
+.site-header .navbar-brand {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--color-nav-text);
+}
+
+[data-theme="light"] .site-header .navbar-brand,
+[data-theme="light"] .site-header .nav-link,
+[data-theme="light"] .site-header .btn-outline-light {
+    color: var(--color-nav-text) !important;
+}
+
+[data-theme="dark"] .site-header .navbar-brand,
+[data-theme="dark"] .site-header .nav-link,
+[data-theme="dark"] .site-header .btn-outline-light {
+    color: var(--color-nav-text) !important;
+}
+
+.site-header .navbar-brand:hover,
+.site-header .navbar-brand:focus {
+    color: var(--color-nav-link-hover);
+}
+
+.site-header .nav-link {
+    color: var(--color-nav-link);
+    font-size: var(--text-sm);
+    padding-inline: 0.75rem;
+    transition: color var(--transition-base);
+}
+
+.site-header .nav-link:hover,
+.site-header .nav-link.active,
+.site-header .nav-link[aria-current="page"] {
+    color: var(--color-nav-link-hover);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.site-header .navbar-toggler {
+    border-color: var(--color-nav-border);
+}
+
+.site-header .navbar-toggler-icon {
+    filter: invert(1) brightness(0.2);
+}
+
+[data-theme="dark"] .site-header .navbar-toggler-icon {
+    filter: none;
+}
+
+.site-header .btn-outline-light {
+    color: var(--color-nav-text);
+    border-color: var(--color-nav-border);
+    background-color: transparent;
+}
+
+.site-header .btn-outline-light:hover,
+.site-header .btn-outline-light:focus,
+.site-header .btn-outline-light:active {
+    color: var(--color-nav-bg);
+    border-color: var(--color-nav-link-hover);
+    background-color: var(--color-nav-link-hover);
+}
+
+.site-header .btn {
+    font-size: var(--text-sm);
+}
+
+.site-header .theme-toggle-label {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    vertical-align: middle;
+}

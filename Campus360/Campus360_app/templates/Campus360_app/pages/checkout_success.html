@@ -1,0 +1,35 @@
+{% extends 'Campus360_app/base/base.html' %}
+{% load static %}
+
+{% block title %}Compra confirmada | Campus360{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/pages/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-wrapper">
+    <article class="auth-card text-center">
+        <h1 class="h3 mb-3">Compra confirmada</h1>
+
+        {% if orden %}
+            <p class="mb-2">Tu orden fue registrada correctamente.</p>
+            <p class="mb-1"><strong>Orden:</strong> #{{ orden.id }}</p>
+            <p class="mb-3"><strong>Total:</strong> ${{ orden.total }}</p>
+
+            <div class="text-start mb-3">
+                <h2 class="h6">Detalle</h2>
+                <ul class="mb-0">
+                    {% for detalle in orden.detalles_orden.all %}
+                        <li>{{ detalle.cantidad }} x {{ detalle.libro.titulo }} — ${{ detalle.precio_unitario }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% else %}
+            <p class="mb-3">No se encontró la orden solicitada.</p>
+        {% endif %}
+
+        <a href="{% url 'venta_libro' %}" class="btn btn-accent">Volver al catálogo</a>
+    </article>
+</section>
+{% endblock %}

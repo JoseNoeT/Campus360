@@ -1,0 +1,121 @@
+{% extends 'Campus360_app/base/base.html' %}
+{% load static %}
+
+{% block title %}Perfil | Campus360{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/perfil.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+<div class="row g-4 profile-layout">
+
+    <!-- Foto y datos básicos -->
+    <div class="col-md-4">
+        <article class="auth-card profile-card p-4 text-center">
+            <img src="{% static 'img/perfilimg.png' %}" alt="Foto de perfil"
+                 class="rounded-circle mb-3" style="width:120px;height:120px;object-fit:cover;">
+            <h2 class="h5" id="profile-fullname"></h2>
+            <p class="text-muted small" id="profile-email"></p>
+            <p class="text-muted small" id="profile-role"></p>
+        </article>
+    </div>
+
+    <!-- Formularios y secciones -->
+    <div class="col-md-8 d-flex flex-column gap-4">
+
+        <!-- Información básica -->
+        <article class="auth-card p-4">
+            <h3 class="h6 mb-3">Información Básica</h3>
+            <div id="perfil-feedback" class="perfil-feedback" hidden aria-live="polite"></div>
+            <form novalidate>
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" id="nombre" name="nombre" class="form-control">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="apellido" class="form-label">Apellido</label>
+                        <input type="text" id="apellido" name="apellido" class="form-control">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="correo" class="form-label">Correo</label>
+                        <input type="email" id="correo" name="correo" class="form-control" readonly>
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="fecha-nacimiento" class="form-label">Fecha de nacimiento</label>
+                        <input type="date" id="fecha-nacimiento" name="fecha-nacimiento" class="form-control">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="foto" class="form-label">Foto de perfil</label>
+                        <input type="file" id="foto" name="foto" class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <label for="direccion" class="form-label">Dirección</label>
+                        <input type="text" id="direccion" name="direccion" class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <button type="button" id="btn-guardar-perfil" class="btn btn-primary">
+                            Guardar cambios
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </article>
+
+        <!-- Preferencias -->
+        <article class="auth-card p-4">
+            <h3 class="h6 mb-3">Preferencias</h3>
+            <form method="post" novalidate>
+                {% csrf_token %}
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <label for="idioma" class="form-label">Idioma</label>
+                        <select id="idioma" name="idioma" class="form-select">
+                            <option value="es">Español</option>
+                            <option value="en">Inglés</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="modo-visualizacion" class="form-label">Modo</label>
+                        <select id="modo-visualizacion" name="modo-visualizacion" class="form-select">
+                            <option value="claro">Modo Claro</option>
+                            <option value="oscuro">Modo Oscuro</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="notificaciones" class="form-label">Notificaciones</label>
+                        <select id="notificaciones" name="notificaciones" class="form-select">
+                            <option value="email">Correo</option>
+                            <option value="sms">SMS</option>
+                            <option value="push">Push</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="temas" class="form-label">Temas de interés</label>
+                        <input type="text" id="temas" name="temas" class="form-control">
+                    </div>
+                </div>
+            </form>
+        </article>
+
+        <!-- Historial y wishlist -->
+        <article class="auth-card p-4">
+            <h3 class="h6 mb-3">Historial de actividad</h3>
+            <ul class="list-unstyled text-muted small mb-0">
+                <li class="mb-1">Historial de compras</li>
+                <li class="mb-1">Historial de búsqueda</li>
+                <li class="mb-1">Libros leídos o adquiridos</li>
+                <li>Wishlist — libros favoritos</li>
+            </ul>
+        </article>
+
+    </div>
+</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{% static 'js/pages/perfil.js' %}"></script>
+{% endblock %}

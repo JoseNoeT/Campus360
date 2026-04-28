@@ -1,0 +1,18 @@
+<div class="item book-card card h-100" data-isbn="{{ libro.isbn }}">
+    <img src="{{ libro.imagen }}"
+         class="card-img-top img-item book-cover"
+         alt="Portada de {{ libro.titulo }}"
+         loading="lazy"
+         width="220"
+         height="220">
+    <div class="card-body d-flex flex-column">
+        <span class="titulo-item h6 mb-2">{{ libro.titulo }}</span>
+        <p class="text-muted small mb-1">{{ libro.autor }}</p>
+        <span class="precio-item fw-semibold mb-3">${{ libro.precio }}</span>
+        <button class="btn btn-accent mt-auto add-to-cart-btn" type="button"
+            data-action="add-to-cart"
+                aria-label="Agregar {{ libro.titulo }} al carrito">
+            Agregar al carrito
+        </button>
+    </div>
+</div>

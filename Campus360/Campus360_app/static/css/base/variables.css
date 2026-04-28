@@ -1,0 +1,133 @@
+/* ============================================
+   CAMPUS360 — DESIGN TOKENS
+   Light mode (default) + Dark mode override
+   ============================================ */
+
+:root {
+    /* ----- Typography ----- */
+    --font-main: 'Montserrat', sans-serif;
+    --text-xs:   0.75rem;    /*  12px */
+    --text-sm:   0.875rem;   /*  14px */
+    --text-base: 1rem;       /*  16px */
+    --text-lg:   1.125rem;   /*  18px */
+    --text-xl:   1.25rem;    /*  20px */
+    --text-2xl:  1.5rem;     /*  24px */
+    --text-3xl:  1.875rem;   /*  30px */
+
+    /* ----- Colors — Light mode ----- */
+    --color-bg:            #eef4fb;
+    --color-surface:       #ffffff;
+    --color-surface-2:     #f4f8fd;
+    --color-text:          #1a2a3a;
+    --color-muted:         #6b7280;
+    --color-primary:       #1389d2;
+    --color-primary-dark:  #0f6fac;
+    --color-primary-light: #a2b8f0;
+    --color-bg-alt:        #f8fafc;
+    --color-primary-bg:    #e7f1ff;
+    --color-border:        #cce0f5;
+    --color-border-strong: #93c5e8;
+    --color-danger:        #dc2626;
+    --color-success:       #16a34a;
+
+    /* ----- Navigation — Light mode ----- */
+    --color-nav-bg:         royalblue;
+    --color-nav-text:       white;
+    --color-nav-link:       white;
+    --color-nav-link-hover: aliceblue;
+    --color-nav-border:     #9ab9d6;
+
+    /* ----- Shape ----- */
+    --radius-sm:   8px;
+    --radius-md:   12px;
+    --shadow-sm:   0 4px 16px rgba(19, 137, 210, 0.10);
+    --shadow-hover:0 8px 28px rgba(19, 137, 210, 0.20);
+    --shadow-focus:0 0 0 3px rgba(19, 137, 210, 0.30);
+
+    /* ----- Spacing ----- */
+    --space-xs: 0.5rem;
+    --space-sm: 1rem;
+    --space-md: 1.5rem;
+    --space-lg: 2rem;
+    --space-xl: 3rem;
+
+    /* ----- Transition ----- */
+    --transition-base:  0.15s ease;
+    --transition-theme: background-color 0.25s ease, color 0.25s ease,
+                        border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* ============================================
+    DARK MODE OVERRIDES
+    ============================================ */
+[data-theme="dark"] {
+    --color-bg:            #0f172a;
+    --color-surface:       #1e293b;
+    --color-surface-2:     #263348;
+    --color-text:          #e2e8f0;
+    --color-muted:         #94a3b8;
+    --color-primary:       #3b82f6;
+    --color-primary-dark:  #2563eb;
+    --color-primary-light: #93c5fd;
+    --color-bg-alt:        #16253a;
+    --color-primary-bg:    #243854;
+    --color-border:        #2d3f55;
+    --color-border-strong: #3d5068;
+    --shadow-sm:           0 4px 16px rgba(0, 0, 0, 0.40);
+    --shadow-hover:        0 8px 28px rgba(0, 0, 0, 0.55);
+    --shadow-focus:        0 0 0 3px rgba(59, 130, 246, 0.35);
+
+    --color-nav-bg:         #0f172a;
+    --color-nav-text:       #e2e8f0;
+    --color-nav-link:       #cbd5e1;
+    --color-nav-link-hover: #ffffff;
+    --color-nav-border:     #334155;
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+*,
+*::before,
+*::after {
+    transition: background-color var(--transition-theme),
+                color var(--transition-theme),
+                border-color var(--transition-theme);
+}
+
+/* Preserve fast transitions on interactive elements */
+.btn,
+a,
+input,
+select,
+textarea {
+    transition: none;
+}
+
+body {
+    font-family: var(--font-main);
+    font-size: var(--text-base);
+    line-height: 1.6;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    transition: var(--transition-theme);
+}
+
+/* Headings always use primary text color */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--color-text);
+}
+
+p {
+    color: var(--color-text);
+}
+
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color var(--transition-base);
+}
+
+a:hover {
+    color: var(--color-primary-dark);
+}

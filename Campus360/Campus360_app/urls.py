@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from Campus360_app import views
+from Campus360_app.views import CatalogoLibroListView
 
 # Definir un router para las vistas de la API
 router = DefaultRouter()
@@ -27,5 +28,6 @@ urlpatterns = [
     path('admin_view/', views.admin_view, name='admin_view'),  # Cambiado para evitar conflictos
     path('api/libros/', views.lista_libros, name='lista_libros'),  # Endpoint de la API para listar libros
     path('book/', views.book_view, name='book'), 
+    path('api/catalogo/', CatalogoLibroListView.as_view(), name='catalogo_libros'),
 ]
 

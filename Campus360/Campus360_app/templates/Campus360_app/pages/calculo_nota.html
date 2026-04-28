@@ -1,0 +1,73 @@
+{% extends 'Campus360_app/base/base.html' %}
+{% load static %}
+
+{% block title %}Calculadora de Notas | Campus360{% endblock %}
+
+{% block content %}
+<section class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+        <h1 class="h3 mb-4">Calculadora de Notas</h1>
+        <article class="auth-card p-4">
+            <form id="calculator-form" novalidate>
+                <div class="additional-notes">
+                    <div class="mb-3">
+                        <label for="nota1" class="form-label">Nota 1</label>
+                        <input type="number" class="form-control" id="nota1" min="20" max="70" name="nota1" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nota2" class="form-label">Nota 2</label>
+                        <input type="number" class="form-control" id="nota2" min="20" max="70" name="nota2" required>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mb-3">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" id="add-note-btn">+ Añadir nota</button>
+                    <button type="button" class="btn btn-outline-danger btn-sm" id="delete-note">− Eliminar</button>
+                </div>
+
+                <hr>
+
+                <div class="mb-3">
+                    <label for="nota_examen" class="form-label">Nota del Examen</label>
+                    <input type="number" class="form-control" id="nota_examen" min="20" max="70" name="nota_examen">
+                </div>
+                <div class="mb-3">
+                    <label for="promedio" class="form-label">Promedio</label>
+                    <input type="number" class="form-control" id="promedio" name="promedio" placeholder="Resultado" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="nota_final" class="form-label">Nota Final</label>
+                    <input type="number" class="form-control" id="nota_final" name="nota_final" readonly>
+                </div>
+
+                <button type="submit" class="btn btn-accent w-100" onclick="calcularNota()">Calcular</button>
+            </form>
+        </article>
+
+        <div class="mt-3">
+            <a href="{% url 'index' %}" class="btn btn-outline-secondary btn-sm">← Volver</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function calcularNota() {
+        const nota1 = parseFloat(document.getElementById('nota1').value);
+        const nota2 = parseFloat(document.getElementById('nota2').value);
+        const additionalNotes = $('.additional-notes div').map(function () {
+            return parseFloat($(this).find('input').val());
+        }).get();
+        const notaExamen = parseFloat(document.getElementById('nota_examen').value);
+        const sumaAdditional = additionalNotes.reduce((a, b) => a + b, 0);
+        const promedio = (nota1 + nota2 + sumaAdditional) / (2 + additionalNotes.length);
+        const notaFinal = (promedio + notaExamen) / 2;
+        document.getElementById('promedio').value = promedio.toFixed(2);
+        document.getElementById('nota_final').value = notaFinal.toFixed(2);
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+<script src="{% static 'JQuery/calculo_nota_validate.js' %}"></script>
+{% endblock %}

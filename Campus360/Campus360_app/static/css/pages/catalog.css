@@ -1,0 +1,341 @@
+.catalog-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    margin-bottom: 1.5rem;
+}
+
+.catalog-header {
+    background: var(--color-bg-alt, #f8fafc);
+    border-radius: var(--radius-lg, 1rem);
+    padding: 1.5rem 2rem 1rem 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+
+.breadcrumb {
+    background: transparent;
+    font-size: 0.95rem;
+    --bs-breadcrumb-divider: '›';
+}
+
+.catalog-count {
+    font-weight: 500;
+    background: var(--color-primary-bg, #e7f1ff);
+    color: var(--color-primary, #1976d2);
+    border-radius: 1rem;
+    padding: 0.25em 0.9em;
+    border: 1px solid color-mix(in srgb, var(--color-primary) 28%, transparent);
+}
+
+.catalog-benefits .benefit-card {
+    border: 1px solid var(--color-border, #e0e0e0);
+    border-radius: var(--radius-md, 0.8rem);
+    background: var(--color-surface);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    transition: box-shadow .18s;
+}
+.catalog-benefits .benefit-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+.benefit-icon {
+    font-size: 2.1rem;
+    color: var(--color-primary, #1976d2);
+}
+
+.catalog-toolbar.card {
+    border-radius: var(--radius-lg, 1rem);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    background: var(--color-bg-alt, #f8fafc);
+}
+.catalog-toolbar .form-control,
+.catalog-toolbar .form-select {
+    min-width: 120px;
+    border-radius: 0.5rem;
+}
+.catalog-filter-actions .btn {
+    min-width: 120px;
+}
+
+.catalog-categories {
+    margin-bottom: 1.5rem;
+}
+.category-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    background: var(--color-bg-alt, #f8fafc);
+    border: 1px solid var(--color-border, #e0e0e0);
+    border-radius: 2em;
+    padding: 0.5em 1.2em;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-primary, #1976d2);
+    cursor: pointer;
+    transition: background .15s, color .15s, box-shadow .15s;
+}
+.category-chip:hover, .category-chip.active {
+    background: var(--color-primary, #1976d2);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(25,118,210,0.08);
+}
+
+.catalog-card {
+    border-radius: var(--radius-md, 0.8rem);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    background: var(--color-surface);
+    transition: box-shadow .18s, transform .12s;
+    position: relative;
+    overflow: hidden;
+    min-height: 340px;
+    display: flex;
+    flex-direction: column;
+}
+.catalog-card:hover {
+    box-shadow: 0 8px 24px rgba(25,118,210,0.10);
+    transform: translateY(-2px) scale(1.012);
+}
+.catalog-img-wrap {
+    position: relative;
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.catalog-img {
+    max-height: 180px;
+    object-fit: contain;
+    background: var(--color-surface-2);
+    border-radius: 0.6rem;
+    width: 100%;
+}
+.badge {
+    font-size: 0.85em;
+    border-radius: 0.7em;
+}
+.catalog-info {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2em;
+}
+.catalog-precio {
+    font-size: 1.1rem;
+    color: var(--color-success, #388e3c);
+}
+.catalog-card .btn {
+    border-radius: 0.5rem;
+    font-size: 0.98em;
+}
+.catalog-card .btn-accent {
+    background: var(--color-primary, #1976d2);
+    color: #fff;
+    border: none;
+}
+.catalog-card .btn-accent:hover {
+    background: #125ea2;
+}
+.catalog-card .btn-outline-secondary {
+    border: 1px solid var(--color-border-strong);
+}
+
+/* Skeleton loading */
+.skeleton-card {
+    background: var(--color-surface-2);
+    border-radius: 0.8rem;
+    min-height: 340px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7em;
+    animation: skeleton-pulse 1.2s infinite ease-in-out alternate;
+}
+.skeleton-img {
+    height: 140px;
+    background: color-mix(in srgb, var(--color-border) 70%, var(--color-surface-2));
+    border-radius: 0.6rem;
+}
+.skeleton-line {
+    height: 16px;
+    background: color-mix(in srgb, var(--color-border) 70%, var(--color-surface-2));
+    border-radius: 0.4rem;
+}
+.skeleton-btn {
+    height: 36px;
+    background: color-mix(in srgb, var(--color-border) 70%, var(--color-surface-2));
+    border-radius: 0.5rem;
+}
+@keyframes skeleton-pulse {
+    0% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+/* Carrito sticky y panel */
+.catalog-cart-panel {
+    position: sticky;
+    top: 2.5rem;
+    max-width: 340px;
+    margin-left: auto;
+    background: var(--color-surface);
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    padding: 1.2rem 1rem;
+    z-index: 10;
+}
+.cart-empty-message {
+    color: var(--color-muted);
+    font-size: 1.1rem;
+}
+
+[data-theme="dark"] .catalog-header,
+[data-theme="dark"] .catalog-toolbar.card,
+[data-theme="dark"] .catalog-benefits .benefit-card,
+[data-theme="dark"] .catalog-card,
+[data-theme="dark"] .catalog-cart-panel {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+}
+
+[data-theme="dark"] .catalog-header h1,
+[data-theme="dark"] .catalog-benefits h3,
+[data-theme="dark"] .catalog-card h3,
+[data-theme="dark"] .catalog-card h4,
+[data-theme="dark"] .catalog-card h5,
+[data-theme="dark"] .catalog-card p,
+[data-theme="dark"] .catalog-toolbar label,
+[data-theme="dark"] .catalog-toolbar .form-control,
+[data-theme="dark"] .catalog-toolbar .form-select {
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .catalog-header .text-muted,
+[data-theme="dark"] .catalog-benefits .text-muted,
+[data-theme="dark"] .catalog-card .text-muted,
+[data-theme="dark"] .catalog-cart-panel .text-muted {
+    color: var(--color-muted) !important;
+}
+
+[data-theme="dark"] .catalog-toolbar .form-control,
+[data-theme="dark"] .catalog-toolbar .form-select {
+    background: var(--color-surface-2);
+    border-color: var(--color-border);
+}
+
+[data-theme="dark"] .catalog-toolbar .form-control::placeholder {
+    color: var(--color-muted);
+    opacity: 1;
+}
+
+[data-theme="dark"] .category-chip {
+    background: var(--color-surface-2);
+    color: var(--color-primary-light);
+    border-color: var(--color-border);
+}
+
+[data-theme="dark"] .category-chip:hover,
+[data-theme="dark"] .category-chip.active {
+    background: var(--color-primary);
+    color: #ffffff;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+    .catalog-cart-panel {
+        position: static;
+        max-width: 100%;
+        margin: 0 0 1.5rem 0;
+    }
+}
+@media (max-width: 767px) {
+    .catalog-header, .catalog-toolbar.card, .catalog-cart-panel {
+        padding: 1rem 0.5rem;
+    }
+    .catalog-grid {
+        grid-template-columns: 1fr;
+    }
+    .catalog-benefits .benefit-card {
+        padding: 1rem 0.5rem;
+    }
+}
+
+.contenedor-items .item {
+    overflow: hidden;
+}
+
+.item .titulo-item {
+    display: block;
+}
+
+.header-carrito {
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.75rem;
+}
+
+.carrito-items {
+    margin-top: 0.75rem;
+}
+
+.carrito-item {
+    display: grid;
+    grid-template-columns: 72px 1fr auto;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.carrito-item-detalles {
+    min-width: 0;
+}
+
+.selector-cantidad {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin: 0.4rem 0;
+}
+
+.btn-eliminar {
+    border: 0;
+    background: transparent;
+    color: var(--color-muted);
+    transition: color var(--transition-base);
+}
+
+.btn-eliminar:hover {
+    color: var(--color-danger);
+}
+
+.cart-feedback {
+    border-radius: var(--radius-md);
+    padding: 0.65rem 0.9rem;
+    margin-bottom: 1rem;
+    font-size: var(--text-sm);
+    border: 1px solid transparent;
+}
+
+.cart-feedback--success {
+    background: color-mix(in srgb, var(--color-success) 15%, transparent);
+    border-color: color-mix(in srgb, var(--color-success) 45%, transparent);
+    color: var(--color-text);
+}
+
+.cart-feedback--error {
+    background: color-mix(in srgb, var(--color-danger) 14%, transparent);
+    border-color: color-mix(in srgb, var(--color-danger) 44%, transparent);
+    color: var(--color-text);
+}
+
+.cart-feedback--warning {
+    background: color-mix(in srgb, var(--color-warning) 18%, transparent);
+    border-color: color-mix(in srgb, var(--color-warning) 48%, transparent);
+    color: var(--color-text);
+}
+
+.add-to-cart-btn.is-loading {
+    opacity: 0.82;
+    pointer-events: none;
+}
+
+.btn-pagar.is-loading {
+    opacity: 0.85;
+    pointer-events: none;
+}

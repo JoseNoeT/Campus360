@@ -1,0 +1,92 @@
+{% extends 'Campus360_app/base/base.html' %}
+{% load static %}
+
+{% block title %}Inicio | Campus360{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/pages/home.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- ============================
+     HERO SLIDER
+============================= -->
+<section class="hero" aria-label="Bienvenida Campus360">
+
+    <!-- Slides -->
+    <div class="hero__track" aria-live="polite">
+
+           <div class="hero__slide" role="img" aria-label="Estudiantes en biblioteca"
+               style="--hero-img: url('https://images.unsplash.com/photo-1512820790803-83ca734da794?w=1400&q=80&auto=format&fit=crop'), url('{% static 'img/seo.png' %}')">
+        </div>
+
+           <div class="hero__slide" role="img" aria-label="Libros abiertos de estudio"
+               style="--hero-img: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1400&q=80&auto=format&fit=crop'), url('{% static 'img/ai.png' %}')">
+        </div>
+
+           <div class="hero__slide" role="img" aria-label="Sala de clases moderna"
+               style="--hero-img: url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=1400&q=80&auto=format&fit=crop'), url('{% static 'img/support.png' %}')">
+        </div>
+
+    </div>
+
+    <!-- Overlay + content -->
+    <div class="hero__overlay">
+        <div class="hero__content container">
+            <p class="hero__eyebrow">Plataforma educativa</p>
+            <h1 class="hero__title">Campus<span class="hero__accent">360</span></h1>
+            <p class="hero__subtitle">
+                Tu espacio para potenciar el aprendizaje.<br>
+                Libros académicos, calculadora de notas y más.
+            </p>
+            <div class="hero__cta">
+                <a class="btn btn-accent btn-lg" href="{% url 'venta_libro' %}">Ver catálogo</a>
+                <a class="btn btn-hero-outline btn-lg" href="{% url 'biblioteca360' %}">Explorar biblioteca</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dot indicators -->
+    <div class="hero__dots" aria-label="Navegación del slider" role="tablist">
+        <button class="hero__dot hero__dot--active" aria-label="Slide 1" role="tab" data-slide="0"></button>
+        <button class="hero__dot" aria-label="Slide 2" role="tab" data-slide="1"></button>
+        <button class="hero__dot" aria-label="Slide 3" role="tab" data-slide="2"></button>
+    </div>
+
+    <!-- Prev / Next -->
+    <button class="hero__arrow hero__arrow--prev" aria-label="Slide anterior">&#8249;</button>
+    <button class="hero__arrow hero__arrow--next" aria-label="Siguiente slide">&#8250;</button>
+
+</section>
+
+<!-- ============================
+     FEATURE CARDS
+============================= -->
+<section class="row g-3 mt-2" aria-label="Características principales">
+    <div class="col-md-4">
+        <article class="feature-card p-4 h-100">
+            <div class="feature-card__icon" aria-hidden="true">📚</div>
+            <h2 class="h5 mt-3">Contenido académico</h2>
+            <p class="mb-0">Recursos para fortalecer tus materias con enfoque práctico.</p>
+        </article>
+    </div>
+    <div class="col-md-4">
+        <article class="feature-card p-4 h-100">
+            <div class="feature-card__icon" aria-hidden="true">🛒</div>
+            <h2 class="h5 mt-3">Compra de libros</h2>
+            <p class="mb-0">Consulta catálogo y gestiona tus compras de manera centralizada.</p>
+        </article>
+    </div>
+    <div class="col-md-4">
+        <article class="feature-card p-4 h-100">
+            <div class="feature-card__icon" aria-hidden="true">🧮</div>
+            <h2 class="h5 mt-3">Herramientas útiles</h2>
+            <p class="mb-0">Calculadora de notas y utilidades para tu vida universitaria.</p>
+        </article>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'JQuery/hero-slider.js' %}"></script>
+{% endblock %}

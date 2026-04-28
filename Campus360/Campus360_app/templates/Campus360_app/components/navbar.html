@@ -1,0 +1,42 @@
+<header class="site-header">
+    <nav class="navbar navbar-expand-lg app-navbar">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{% url 'index' %}">Campus360</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'biblioteca360' %}">Biblioteca</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'venta_libro' %}">Catálogo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'calculo_nota' %}">Calculadora</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'perfil' %}">Perfil</a></li>
+                </ul>
+                <div class="d-flex gap-2 align-items-center">
+                    {% if request.user.is_authenticated %}
+                    <a class="btn btn-outline-light btn-sm" href="{% url 'perfil' %}" title="Usuario autenticado">
+                        {% if request.user.first_name or request.user.last_name %}
+                            {{ request.user.first_name }} {{ request.user.last_name }}
+                        {% else %}
+                            {{ request.user.email }}
+                        {% endif %}
+                    </a>
+                    <form method="post" action="{% url 'logout' %}" class="m-0">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-accent btn-sm">Cerrar sesión</button>
+                    </form>
+                    {% else %}
+                    <a class="btn btn-outline-light btn-sm" href="{% url 'login' %}">Iniciar sesión</a>
+                    <a class="btn btn-accent btn-sm" href="{% url 'registro' %}">Registrarse</a>
+                    {% endif %}
+                    <button id="theme-toggle" class="btn btn-sm btn-outline-light ms-1"
+                            type="button" aria-label="Cambiar modo">
+                        <span id="theme-icon">🌙</span>
+                        <span id="theme-label" class="theme-toggle-label d-inline d-lg-none ms-1">Claro</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>

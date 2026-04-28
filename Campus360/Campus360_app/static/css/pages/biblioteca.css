@@ -1,0 +1,40 @@
+/* Biblioteca page styles (scoped, navbar-safe) */
+
+.biblioteca-page {
+    --biblioteca-bg: linear-gradient(180deg, #f6fbff 0%, #eef6fd 100%);
+}
+
+[data-theme="dark"] .biblioteca-page {
+    --biblioteca-bg: linear-gradient(180deg, #1a2840 0%, #152338 100%);
+}
+
+.biblioteca-page .biblioteca-hero {
+    border-radius: 1rem;
+    padding: 1.25rem;
+    background: var(--biblioteca-bg);
+    border: 1px solid var(--color-border, #dbe6f1);
+    box-shadow: 0 6px 20px rgba(10, 42, 74, 0.06);
+}
+
+.biblioteca-page #search-box {
+    border-radius: 0.75rem 0 0 0.75rem;
+}
+
+.biblioteca-page #search {
+    border-radius: 0 0.75rem 0.75rem 0;
+}
+
+.biblioteca-page .book-list {
+    margin-top: 1.5rem;
+}
+
+.biblioteca-page #list-output .row {
+    min-height: 120px;
+}
+
+.biblioteca-page .book-card {
+    border: 1px solid var(--color-border, #dbe6f1);
+    border-radius: 0.85rem;
+    background: var(--color-surface);
+    box-shadow: 0 4px 12px rgba(10, 42, 74, 0.05);
+}
