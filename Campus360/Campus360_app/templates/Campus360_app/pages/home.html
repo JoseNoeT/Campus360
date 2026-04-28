@@ -8,83 +8,220 @@
 {% endblock %}
 
 {% block content %}
-<!-- ============================
-     HERO SLIDER
-============================= -->
+<div class="home-page">
 <section class="hero" aria-label="Bienvenida Campus360">
 
-    <!-- Slides -->
     <div class="hero__track" aria-live="polite">
 
-           <div class="hero__slide" role="img" aria-label="Estudiantes en biblioteca"
-               style="--hero-img: url('https://images.unsplash.com/photo-1512820790803-83ca734da794?w=1400&q=80&auto=format&fit=crop'), url('{% static 'img/seo.png' %}')">
+        <div class="hero__slide" role="img" aria-label="Estudiantes en biblioteca"
+             style="--hero-img: url('https://images.unsplash.com/photo-1512820790803-83ca734da794?w=1400&q=80&auto=format&fit=crop'), url('{% static 'img/seo.png' %}')">
         </div>
 
-           <div class="hero__slide" role="img" aria-label="Libros abiertos de estudio"
-               style="--hero-img: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1400&q=80&auto=format&fit=crop'), url('{% static 'img/ai.png' %}')">
+        <div class="hero__slide" role="img" aria-label="Libros abiertos de estudio"
+             style="--hero-img: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1400&q=80&auto=format&fit=crop'), url('{% static 'img/ai.png' %}')">
         </div>
 
-           <div class="hero__slide" role="img" aria-label="Sala de clases moderna"
-               style="--hero-img: url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=1400&q=80&auto=format&fit=crop'), url('{% static 'img/support.png' %}')">
+        <div class="hero__slide" role="img" aria-label="Sala de clases moderna"
+             style="--hero-img: url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=1400&q=80&auto=format&fit=crop'), url('{% static 'img/support.png' %}')">
         </div>
 
     </div>
 
-    <!-- Overlay + content -->
     <div class="hero__overlay">
         <div class="hero__content container">
             <p class="hero__eyebrow">Plataforma educativa</p>
             <h1 class="hero__title">Campus<span class="hero__accent">360</span></h1>
             <p class="hero__subtitle">
-                Tu espacio para potenciar el aprendizaje.<br>
-                Libros académicos, calculadora de notas y más.
+                Tu puerta de entrada para descubrir referencias, comprar libros, calcular tu avance académico y gestionar tu perfil en un solo lugar.
             </p>
             <div class="hero__cta">
                 <a class="btn btn-accent btn-lg" href="{% url 'venta_libro' %}">Ver catálogo</a>
                 <a class="btn btn-hero-outline btn-lg" href="{% url 'biblioteca360' %}">Explorar biblioteca</a>
             </div>
+            <div class="hero__microcopy">
+                <span>Biblioteca360 para investigar</span>
+                <span>Catálogo para comprar</span>
+                <span>Calculadora para planificar</span>
+            </div>
         </div>
     </div>
 
-    <!-- Dot indicators -->
     <div class="hero__dots" aria-label="Navegación del slider" role="tablist">
         <button class="hero__dot hero__dot--active" aria-label="Slide 1" role="tab" data-slide="0"></button>
         <button class="hero__dot" aria-label="Slide 2" role="tab" data-slide="1"></button>
         <button class="hero__dot" aria-label="Slide 3" role="tab" data-slide="2"></button>
     </div>
 
-    <!-- Prev / Next -->
     <button class="hero__arrow hero__arrow--prev" aria-label="Slide anterior">&#8249;</button>
     <button class="hero__arrow hero__arrow--next" aria-label="Siguiente slide">&#8250;</button>
 
 </section>
 
-<!-- ============================
-     FEATURE CARDS
-============================= -->
-<section class="row g-3 mt-2" aria-label="Características principales">
-    <div class="col-md-4">
-        <article class="feature-card p-4 h-100">
-            <div class="feature-card__icon" aria-hidden="true">📚</div>
-            <h2 class="h5 mt-3">Contenido académico</h2>
-            <p class="mb-0">Recursos para fortalecer tus materias con enfoque práctico.</p>
-        </article>
+<section class="home-section quick-actions" aria-labelledby="quick-actions-title">
+    <div class="home-section__header">
+        <p class="home-section__eyebrow">Acceso directo</p>
+        <h2 id="quick-actions-title" class="home-section__title">¿Qué quieres hacer hoy?</h2>
+        <p class="home-section__subtitle">Accede rápido a los módulos principales de Campus360 según tu objetivo del momento.</p>
     </div>
-    <div class="col-md-4">
-        <article class="feature-card p-4 h-100">
-            <div class="feature-card__icon" aria-hidden="true">🛒</div>
-            <h2 class="h5 mt-3">Compra de libros</h2>
-            <p class="mb-0">Consulta catálogo y gestiona tus compras de manera centralizada.</p>
-        </article>
-    </div>
-    <div class="col-md-4">
-        <article class="feature-card p-4 h-100">
-            <div class="feature-card__icon" aria-hidden="true">🧮</div>
-            <h2 class="h5 mt-3">Herramientas útiles</h2>
-            <p class="mb-0">Calculadora de notas y utilidades para tu vida universitaria.</p>
-        </article>
+
+    <div class="row g-3">
+        <div class="col-12 col-md-6 col-xl-3">
+            <a class="quick-action-card h-100" href="{% url 'biblioteca360' %}">
+                <span class="quick-action-card__icon" aria-hidden="true">🔎</span>
+                <h3 class="h5 mb-2">Explorar Biblioteca360</h3>
+                <p class="mb-0">Descubre referencias externas y recomendaciones locales para investigar mejor.</p>
+            </a>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+            <a class="quick-action-card h-100" href="{% url 'venta_libro' %}">
+                <span class="quick-action-card__icon" aria-hidden="true">🛍️</span>
+                <h3 class="h5 mb-2">Ver catálogo de libros</h3>
+                <p class="mb-0">Consulta el catálogo conectado a la base de datos y encuentra libros para comprar.</p>
+            </a>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+            <a class="quick-action-card h-100" href="{% url 'calculo_nota' %}">
+                <span class="quick-action-card__icon" aria-hidden="true">🧮</span>
+                <h3 class="h5 mb-2">Calcular mis notas</h3>
+                <p class="mb-0">Simula promedios, pesos y resultados para planificar mejor tus evaluaciones.</p>
+            </a>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+            <a class="quick-action-card h-100" href="{% url 'perfil' %}">
+                <span class="quick-action-card__icon" aria-hidden="true">👤</span>
+                <h3 class="h5 mb-2">Revisar mi perfil</h3>
+                <p class="mb-0">Gestiona tu espacio personal y accede a tu experiencia dentro de la plataforma.</p>
+            </a>
+        </div>
     </div>
 </section>
+
+<section class="home-section" aria-labelledby="campus-action-title">
+    <div class="home-section__header">
+        <p class="home-section__eyebrow">Valor del sistema</p>
+        <h2 id="campus-action-title" class="home-section__title">Campus360 en acción</h2>
+        <p class="home-section__subtitle">Una plataforma pensada para conectar exploración académica, compra y planificación sin salir del mismo entorno.</p>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-12 col-md-6 col-xl-3">
+            <article class="system-value-card h-100">
+                <span class="system-value-card__icon" aria-hidden="true">📘</span>
+                <h3 class="h5 mb-2">Catálogo conectado a base de datos</h3>
+                <p class="mb-0">Los libros visibles en la plataforma vienen desde datos reales del sistema, no desde contenido estático.</p>
+            </article>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+            <article class="system-value-card h-100">
+                <span class="system-value-card__icon" aria-hidden="true">🛒</span>
+                <h3 class="h5 mb-2">Carrito integrado con backend</h3>
+                <p class="mb-0">La experiencia de compra se apoya en lógica real del servidor para mantener consistencia en el flujo.</p>
+            </article>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+            <article class="system-value-card h-100">
+                <span class="system-value-card__icon" aria-hidden="true">🌐</span>
+                <h3 class="h5 mb-2">Búsqueda académica externa con fallback local</h3>
+                <p class="mb-0">Biblioteca360 consulta fuentes externas y, si fallan, sigue entregando referencias desde Campus360.</p>
+            </article>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+            <article class="system-value-card h-100">
+                <span class="system-value-card__icon" aria-hidden="true">📈</span>
+                <h3 class="h5 mb-2">Calculadora académica interactiva</h3>
+                <p class="mb-0">El estudiante puede simular su rendimiento en tiempo real y tomar decisiones antes de una evaluación.</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="home-section" aria-labelledby="featured-books-title">
+    <div class="home-section__header home-section__header--split">
+        <div>
+            <p class="home-section__eyebrow">Desde la base de datos</p>
+            <h2 id="featured-books-title" class="home-section__title">Libros destacados</h2>
+            <p class="home-section__subtitle">Una selección rápida para entrar al catálogo con contexto desde el Home.</p>
+        </div>
+        <a class="btn btn-outline-secondary btn-sm" href="{% url 'venta_libro' %}">Ir al catálogo</a>
+    </div>
+
+    {% if featured_books %}
+    <div class="row g-3">
+        {% for libro in featured_books %}
+        <div class="col-12 col-md-6 col-xl-3">
+            <article class="featured-book-card h-100">
+                <div class="featured-book-card__media">
+                    <img
+                        src="{% if libro.imagen %}{{ libro.imagen }}{% else %}https://via.placeholder.com/320x420?text=Campus360{% endif %}"
+                        alt="Portada de {{ libro.titulo }}"
+                        class="featured-book-card__image"
+                        loading="lazy"
+                        width="320"
+                        height="420">
+                </div>
+                <div class="featured-book-card__body">
+                    <div>
+                        <p class="featured-book-card__genre mb-2">{% if libro.genero %}{{ libro.genero }}{% else %}Referencia académica{% endif %}</p>
+                        <h3 class="h5 mb-2">{{ libro.titulo }}</h3>
+                        <p class="featured-book-card__author mb-1">{{ libro.autor|default:'Autor desconocido' }}</p>
+                        <p class="featured-book-card__meta mb-0">{% if libro.editorial %}{{ libro.editorial }}{% else %}Campus360{% endif %}{% if libro.anio %} · {{ libro.anio }}{% endif %}</p>
+                    </div>
+                    <div class="featured-book-card__footer">
+                        <span class="featured-book-card__price">${{ libro.precio }}</span>
+                        <a class="btn btn-accent btn-sm" href="{% url 'venta_libro' %}">Ver catálogo</a>
+                    </div>
+                </div>
+            </article>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="home-empty-state" role="status" aria-live="polite">
+        <h3 class="h5 mb-2">Todavía no hay libros destacados disponibles.</h3>
+        <p class="mb-3">Puedes comenzar explorando Biblioteca360 o visitar el catálogo cuando el contenido esté disponible.</p>
+        <div class="home-empty-state__actions">
+            <a class="btn btn-accent btn-sm" href="{% url 'biblioteca360' %}">Explorar Biblioteca360</a>
+            <a class="btn btn-outline-secondary btn-sm" href="{% url 'venta_libro' %}">Ir al catálogo</a>
+        </div>
+    </div>
+    {% endif %}
+</section>
+
+<section class="home-section" aria-labelledby="goals-title">
+    <div class="home-section__header">
+        <p class="home-section__eyebrow">Exploración guiada</p>
+        <h2 id="goals-title" class="home-section__title">Explora por objetivo</h2>
+        <p class="home-section__subtitle">Entra a Campus360 desde la intención que tienes hoy y sigue el flujo adecuado.</p>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-12 col-lg-4">
+            <article class="goal-card h-100">
+                <span class="goal-card__icon" aria-hidden="true">📚</span>
+                <h3 class="h4 mb-2">Quiero estudiar</h3>
+                <p class="mb-3">Explora referencias, autores y temas para preparar mejor tus asignaturas.</p>
+                <a class="btn btn-outline-secondary" href="{% url 'biblioteca360' %}">Ir a Biblioteca360</a>
+            </article>
+        </div>
+        <div class="col-12 col-lg-4">
+            <article class="goal-card h-100">
+                <span class="goal-card__icon" aria-hidden="true">🛍️</span>
+                <h3 class="h4 mb-2">Quiero comprar libros</h3>
+                <p class="mb-3">Revisa títulos disponibles en el catálogo y avanza hacia una compra real dentro de la plataforma.</p>
+                <a class="btn btn-outline-secondary" href="{% url 'venta_libro' %}">Ir al catálogo</a>
+            </article>
+        </div>
+        <div class="col-12 col-lg-4">
+            <article class="goal-card h-100">
+                <span class="goal-card__icon" aria-hidden="true">🧠</span>
+                <h3 class="h4 mb-2">Quiero calcular mis notas</h3>
+                <p class="mb-3">Simula tu rendimiento académico y visualiza qué necesitas para cumplir tu objetivo.</p>
+                <a class="btn btn-outline-secondary" href="{% url 'calculo_nota' %}">Ir a Calculadora</a>
+            </article>
+        </div>
+    </div>
+</section>
+</div>
 {% endblock %}
 
 {% block scripts %}

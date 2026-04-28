@@ -1,0 +1,191 @@
+.calculator-page {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.calculator-hero {
+    background: linear-gradient(135deg, color-mix(in srgb, var(--color-primary) 16%, var(--color-surface)) 0%, var(--color-surface) 100%);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.calculator-subtitle {
+    color: var(--color-muted);
+    max-width: 760px;
+}
+
+.calculator-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.calculator-chip {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 999px;
+    padding: 0.35rem 0.8rem;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--color-text);
+    background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+}
+
+.calculator-layout {
+    align-items: stretch;
+}
+
+.calculator-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    padding: 1.25rem;
+}
+
+.calculator-card__header {
+    margin-bottom: 1rem;
+}
+
+.calculator-alert {
+    margin-bottom: 1rem;
+    border: 1px solid color-mix(in srgb, var(--color-danger) 60%, transparent);
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--color-danger) 12%, transparent);
+    color: var(--color-text);
+    padding: 0.75rem 0.9rem;
+}
+
+.calculator-divider {
+    border-color: var(--color-border);
+    opacity: 1;
+}
+
+.calculator-config-grid,
+.calculator-result-grid {
+    display: grid;
+    gap: 0.85rem;
+}
+
+.calculator-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.calculator-actions .btn {
+    flex: 1 1 180px;
+}
+
+.calculator-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.calculator-summary-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+}
+
+.calculator-summary-list li {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-2);
+    padding: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.calculator-summary-list .label {
+    color: var(--color-muted);
+    font-size: var(--text-sm);
+}
+
+.calculator-summary-list .value {
+    color: var(--color-text);
+    font-size: var(--text-base);
+    font-weight: 700;
+}
+
+.calculator-summary-list .value.pending {
+    color: var(--color-primary);
+}
+
+.calculator-summary-list .value.result-status--pending {
+    color: var(--color-primary);
+}
+
+.calculator-summary-list .value.success {
+    color: var(--color-success);
+}
+
+.calculator-summary-list .value.result-status--success {
+    color: var(--color-success);
+}
+
+.calculator-summary-list .value.warning {
+    color: #f59e0b;
+}
+
+.calculator-summary-list .value.result-status--warning {
+    color: #f59e0b;
+}
+
+.calculator-summary-list .value.danger {
+    color: var(--color-danger);
+}
+
+.calculator-summary-list .value.result-status--danger {
+    color: var(--color-danger);
+}
+
+.calculator-tip {
+    border: 1px dashed var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    padding: 0.85rem;
+    background: color-mix(in srgb, var(--color-primary) 8%, transparent);
+}
+
+.calculator-tip p {
+    color: var(--color-muted);
+}
+
+.calculator-page .form-control.is-invalid {
+    border-color: var(--color-danger);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-danger) 18%, transparent);
+}
+
+@media (min-width: 768px) {
+    .calculator-config-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .calculator-config-grid__full,
+    .calculator-result-grid {
+        grid-column: 1 / -1;
+    }
+
+    .calculator-result-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 991px) {
+    .calculator-hero,
+    .calculator-card {
+        padding: 1rem;
+    }
+
+    .calculator-actions .btn {
+        flex-basis: 100%;
+    }
+}

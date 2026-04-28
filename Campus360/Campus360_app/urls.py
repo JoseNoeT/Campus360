@@ -18,7 +18,6 @@ router.register(r'detalles-orden', views.DetalleOrdenViewSet)
 urlpatterns = [
     path('', views.index, name='index'),
     path('admin/', admin.site.urls),
-    path('biblioteca360/', views.biblioteca360, name='biblioteca'),
     path('venta-libro/', views.venta_libro, name='venta_libro'),
     path('calculo-nota/', views.calculo_nota, name='calculo_nota'),
     path('forgot_password/', views.forgot_password, name='forgot_password'),

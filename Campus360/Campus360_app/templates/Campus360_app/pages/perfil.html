@@ -8,111 +8,213 @@
 {% endblock %}
 
 {% block content %}
-<div class="profile-page">
-<div class="row g-4 profile-layout">
+<div class="profile-page" data-purchase-count="{{ purchase_count }}" data-cart-count="{{ cart_count }}" data-account-active="{{ account_active|yesno:'true,false' }}">
+    <div class="row g-4 profile-layout">
+        <div class="col-xl-4">
+            <div class="profile-sidebar">
+                <article class="auth-card profile-identity-card p-4">
+                    <div class="profile-identity-card__avatar-wrap text-center">
+                        <img src="{% static 'img/perfilimg.png' %}" alt="Avatar de perfil"
+                             id="profile-avatar" class="profile-identity-card__avatar mb-3">
+                        <div class="profile-identity-card__badges">
+                            <span class="profile-identity-card__badge profile-identity-card__badge--status">Cuenta {% if account_active %}Activa{% else %}Inactiva{% endif %}</span>
+                            <span class="profile-identity-card__badge profile-identity-card__badge--academic">Alumno regular</span>
+                        </div>
+                    </div>
 
-    <!-- Foto y datos básicos -->
-    <div class="col-md-4">
-        <article class="auth-card profile-card p-4 text-center">
-            <img src="{% static 'img/perfilimg.png' %}" alt="Foto de perfil"
-                 class="rounded-circle mb-3" style="width:120px;height:120px;object-fit:cover;">
-            <h2 class="h5" id="profile-fullname"></h2>
-            <p class="text-muted small" id="profile-email"></p>
-            <p class="text-muted small" id="profile-role"></p>
-        </article>
-    </div>
+                    <div class="profile-identity-card__info text-center">
+                        <h1 class="h4 mb-1" id="profile-fullname"></h1>
+                        <p class="text-muted mb-1" id="profile-email"></p>
+                        <p class="text-muted small mb-3" id="profile-role"></p>
+                        <p class="profile-space-claim mb-0">Este es tu espacio academico personal dentro de Campus360.</p>
+                    </div>
 
-    <!-- Formularios y secciones -->
-    <div class="col-md-8 d-flex flex-column gap-4">
+                    <div class="profile-completion">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="profile-completion__label">Progreso de perfil académico</span>
+                            <strong id="profile-completion-value">0%</strong>
+                        </div>
+                        <div class="profile-completion__track" aria-hidden="true">
+                            <div id="profile-completion-bar" class="profile-completion__bar"></div>
+                        </div>
+                        <p id="profile-completion-copy" class="profile-completion__copy mb-0">Completa tu perfil académico para organizar mejor tu experiencia en Campus360.</p>
+                    </div>
+                </article>
 
-        <!-- Información básica -->
-        <article class="auth-card p-4">
-            <h3 class="h6 mb-3">Información Básica</h3>
-            <div id="perfil-feedback" class="perfil-feedback" hidden aria-live="polite"></div>
-            <form novalidate>
-                <div class="row g-3">
-                    <div class="col-sm-6">
-                        <label for="nombre" class="form-label">Nombre</label>
-                        <input type="text" id="nombre" name="nombre" class="form-control">
+                <article class="auth-card p-4">
+                    <div class="profile-section-header">
+                        <p class="profile-section-header__eyebrow">Recorrido académico</p>
+                        <h2 class="h5 mb-1">Tu espacio académico</h2>
+                        <p class="text-muted small mb-0">Accede a las herramientas clave de estudio, consulta y compra desde un solo panel.</p>
                     </div>
-                    <div class="col-sm-6">
-                        <label for="apellido" class="form-label">Apellido</label>
-                        <input type="text" id="apellido" name="apellido" class="form-control">
+                    <div class="profile-actions-grid">
+                        <a class="profile-action-card" href="{% url 'venta_libro' %}">
+                            <span class="profile-action-card__icon" aria-hidden="true">🛒</span>
+                            <div>
+                                <h3 class="h6 mb-1">Explorar catálogo</h3>
+                                <p class="mb-0">Revisa libros disponibles para apoyar tu semestre.</p>
+                            </div>
+                        </a>
+                        <a class="profile-action-card" href="{% url 'biblioteca360' %}">
+                            <span class="profile-action-card__icon" aria-hidden="true">🔎</span>
+                            <div>
+                                <h3 class="h6 mb-1">Buscar en Biblioteca360</h3>
+                                <p class="mb-0">Descubre referencias útiles para tus asignaturas.</p>
+                            </div>
+                        </a>
+                        <a class="profile-action-card" href="{% url 'calculo_nota' %}">
+                            <span class="profile-action-card__icon" aria-hidden="true">🧮</span>
+                            <div>
+                                <h3 class="h6 mb-1">Simular mis notas</h3>
+                                <p class="mb-0">Visualiza tu progreso académico antes de una evaluación.</p>
+                            </div>
+                        </a>
+                        <a class="profile-action-card" href="{% url 'venta_libro' %}#cart-panel">
+                            <span class="profile-action-card__icon" aria-hidden="true">📦</span>
+                            <div>
+                                <h3 class="h6 mb-1">Ver carrito</h3>
+                                <p class="mb-0">Retoma materiales pendientes cuando los necesites.</p>
+                            </div>
+                        </a>
                     </div>
-                    <div class="col-sm-6">
-                        <label for="correo" class="form-label">Correo</label>
-                        <input type="email" id="correo" name="correo" class="form-control" readonly>
-                    </div>
-                    <div class="col-sm-6">
-                        <label for="fecha-nacimiento" class="form-label">Fecha de nacimiento</label>
-                        <input type="date" id="fecha-nacimiento" name="fecha-nacimiento" class="form-control">
-                    </div>
-                    <div class="col-sm-6">
-                        <label for="foto" class="form-label">Foto de perfil</label>
-                        <input type="file" id="foto" name="foto" class="form-control">
-                    </div>
-                    <div class="col-12">
-                        <label for="direccion" class="form-label">Dirección</label>
-                        <input type="text" id="direccion" name="direccion" class="form-control">
-                    </div>
-                    <div class="col-12">
-                        <button type="button" id="btn-guardar-perfil" class="btn btn-primary">
-                            Guardar cambios
-                        </button>
-                    </div>
+                </article>
+            </div>
+        </div>
+
+        <div class="col-xl-8 d-flex flex-column gap-4">
+            <article class="auth-card p-4 profile-academic-overview">
+                <div class="profile-section-header">
+                    <p class="profile-section-header__eyebrow">Vista académica</p>
+                    <h2 class="h5 mb-1">Panorama académico</h2>
+                    <p class="text-muted small mb-0">Una lectura rápida de tu estado actual dentro del ecosistema Campus360.</p>
                 </div>
-            </form>
-        </article>
 
-        <!-- Preferencias -->
-        <article class="auth-card p-4">
-            <h3 class="h6 mb-3">Preferencias</h3>
-            <form method="post" novalidate>
-                {% csrf_token %}
-                <div class="row g-3">
-                    <div class="col-sm-6">
-                        <label for="idioma" class="form-label">Idioma</label>
-                        <select id="idioma" name="idioma" class="form-select">
-                            <option value="es">Español</option>
-                            <option value="en">Inglés</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-6">
-                        <label for="modo-visualizacion" class="form-label">Modo</label>
-                        <select id="modo-visualizacion" name="modo-visualizacion" class="form-select">
-                            <option value="claro">Modo Claro</option>
-                            <option value="oscuro">Modo Oscuro</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-6">
-                        <label for="notificaciones" class="form-label">Notificaciones</label>
-                        <select id="notificaciones" name="notificaciones" class="form-select">
-                            <option value="email">Correo</option>
-                            <option value="sms">SMS</option>
-                            <option value="push">Push</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-6">
-                        <label for="temas" class="form-label">Temas de interés</label>
-                        <input type="text" id="temas" name="temas" class="form-control">
-                    </div>
+                <div class="profile-summary-grid">
+                    <article class="profile-summary-card">
+                        <span class="profile-summary-card__label">Libros en carrito</span>
+                        <strong id="profile-cart-count" class="profile-summary-card__value">{% if cart_count %}{{ cart_count }}{% else %}Sin registros aún{% endif %}</strong>
+                        <p id="profile-cart-note" class="profile-empty-state mb-0">{% if cart_count %}Tienes materiales listos para continuar.{% else %}Tu carrito está vacío. Explora el catálogo para comenzar.{% endif %}</p>
+                    </article>
+                    <article class="profile-summary-card">
+                        <span class="profile-summary-card__label">Compras realizadas</span>
+                        <strong class="profile-summary-card__value">{% if purchase_count %}{{ purchase_count }}{% else %}Sin registros aún{% endif %}</strong>
+                        <p class="profile-empty-state mb-0">{% if purchase_count %}Tienes historial de compras disponible.{% else %}Aún no tienes compras registradas.{% endif %}</p>
+                    </article>
+                    <article class="profile-summary-card">
+                        <span class="profile-summary-card__label">Herramientas académicas usadas</span>
+                        <strong id="profile-tools-used" class="profile-summary-card__value">Sin registros aún</strong>
+                        <p id="profile-tools-note" class="profile-empty-state mb-0">Sin registros aún</p>
+                    </article>
+                    <article class="profile-summary-card">
+                        <span class="profile-summary-card__label">Perfil completado</span>
+                        <strong id="profile-summary-completion" class="profile-summary-card__value">0%</strong>
+                        <p id="profile-completion-note" class="profile-empty-state mb-0">Completa tu perfil para personalizar tu experiencia.</p>
+                    </article>
                 </div>
-            </form>
-        </article>
+            </article>
 
-        <!-- Historial y wishlist -->
-        <article class="auth-card p-4">
-            <h3 class="h6 mb-3">Historial de actividad</h3>
-            <ul class="list-unstyled text-muted small mb-0">
-                <li class="mb-1">Historial de compras</li>
-                <li class="mb-1">Historial de búsqueda</li>
-                <li class="mb-1">Libros leídos o adquiridos</li>
-                <li>Wishlist — libros favoritos</li>
-            </ul>
-        </article>
+            <article class="auth-card p-4">
+                <div class="profile-section-header">
+                    <p class="profile-section-header__eyebrow">Enfoque de estudio</p>
+                    <h2 class="h5 mb-1">Áreas de interés</h2>
+                    <p class="text-muted small mb-0">Selecciona visualmente tus líneas de aprendizaje para orientar tu recorrido académico.</p>
+                </div>
+                <div class="profile-interest-grid" aria-label="Áreas de interés académicas">
+                    <span class="profile-interest-chip">Programación</span>
+                    <span class="profile-interest-chip">Matemáticas</span>
+                    <span class="profile-interest-chip">Literatura</span>
+                    <span class="profile-interest-chip">Ciencias</span>
+                    <span class="profile-interest-chip">Ingeniería</span>
+                    <span class="profile-interest-chip">Historia</span>
+                </div>
+            </article>
 
+            <article class="auth-card p-4 profile-next-step">
+                <div class="profile-section-header mb-2">
+                    <p class="profile-section-header__eyebrow">Recomendación</p>
+                    <h2 class="h5 mb-1">Siguiente paso recomendado</h2>
+                </div>
+                <p class="mb-3">Completa tu perfil académico para personalizar tu experiencia. También puedes explorar Biblioteca360 para encontrar nuevas referencias de estudio.</p>
+                <div>
+                    <a class="btn btn-accent" href="{% url 'biblioteca360' %}">Explorar Biblioteca360</a>
+                </div>
+            </article>
+
+            <article class="auth-card profile-activity-card p-4">
+                <div class="profile-section-header">
+                    <p class="profile-section-header__eyebrow">Seguimiento personal</p>
+                    <h2 class="h5 mb-1">Actividad de aprendizaje</h2>
+                    <p class="text-muted small mb-0">Señales breves sobre tu uso reciente del entorno académico.</p>
+                </div>
+
+                <ul class="profile-activity-list mb-0">
+                    <li class="profile-activity-item">
+                        <strong>Perfil cargado correctamente</strong>
+                        <span>Tu información principal está disponible en este dashboard.</span>
+                    </li>
+                    <li class="profile-activity-item">
+                        <strong>Cuenta {% if account_active %}activa{% else %}inactiva{% endif %}</strong>
+                        <span>{% if account_active %}Puedes usar catálogo, biblioteca y calculadora sin restricciones adicionales.{% else %}Revisa el estado de tu acceso con soporte.{% endif %}</span>
+                    </li>
+                    <li class="profile-activity-item">
+                        {% if latest_order %}
+                        <strong>Última compra registrada</strong>
+                        <span>Pedido #{{ latest_order.id }} · {{ latest_order.fecha|date:'d/m/Y H:i' }} · Total ${{ latest_order.total }}</span>
+                        {% elif cart_count %}
+                        <strong>Carrito disponible</strong>
+                        <span>Tienes elementos listos para continuar tu proceso de compra.</span>
+                        {% else %}
+                        <strong>Aún no tienes compras registradas.</strong>
+                        <span>Explora el catálogo para comenzar.</span>
+                        {% endif %}
+                    </li>
+                </ul>
+            </article>
+
+            <article class="auth-card p-4">
+                <div class="profile-section-header">
+                    <p class="profile-section-header__eyebrow">Identidad del estudiante</p>
+                    <h2 class="h5 mb-1">Perfil académico</h2>
+                    <p class="text-muted small mb-0">Mantén tus datos esenciales organizados para una experiencia más clara y personalizada.</p>
+                </div>
+                <div id="perfil-feedback" class="perfil-feedback" hidden aria-live="polite"></div>
+                <form novalidate>
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" id="nombre" name="nombre" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="apellido" class="form-label">Apellido</label>
+                            <input type="text" id="apellido" name="apellido" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="correo" class="form-label">Correo institucional</label>
+                            <input type="email" id="correo" name="correo" class="form-control" readonly>
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="fecha-nacimiento" class="form-label">Fecha de nacimiento</label>
+                            <input type="date" id="fecha-nacimiento" name="fecha-nacimiento" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="foto" class="form-label">Foto de perfil</label>
+                            <input type="file" id="foto" name="foto" class="form-control" accept="image/*">
+                        </div>
+                        <div class="col-12">
+                            <label for="direccion" class="form-label">Dirección</label>
+                            <input type="text" id="direccion" name="direccion" class="form-control">
+                        </div>
+                        <div class="col-12 d-flex flex-wrap gap-2 align-items-center">
+                            <button type="button" id="btn-guardar-perfil" class="btn btn-primary">
+                                Guardar perfil academico
+                            </button>
+                            <p class="profile-form-note mb-0">Completa tu perfil para personalizar tu experiencia.</p>
+                        </div>
+                    </div>
+                </form>
+            </article>
+        </div>
     </div>
-</div>
 </div>
 {% endblock %}
 

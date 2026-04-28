@@ -1,52 +1,65 @@
 
 # Campus360
 
-## Descripción breve
-Campus360 es una plataforma web profesional para gestión y venta de libros universitarios, con catálogo avanzado, carrito, perfil de usuario y administración.
+Campus360 is a Django web platform focused on academic support and book commerce for students.
 
-## Funcionalidades principales
-- Catálogo de libros con búsqueda, filtros, ordenamiento y paginación
-- Carrito de compras y proceso de checkout
-- Gestión de perfil de usuario
-- Autenticación y registro
-- API RESTful para frontend moderno
-- Panel de administración Django
+## Main modules
+- Home dashboard with featured content
+- Biblioteca360 for academic reference search (external source with local fallback)
+- Catalog with search, filters, ordering, pagination, and cart flow
+- Academic profile dashboard
+- Grade calculator (student tools)
+- Authentication (login, register, session)
 
-## Tecnologías usadas
-- Python 3.12
+## Tech stack
+- Python 3.12+
 - Django 6.x
 - Django REST Framework
 - django-filter
 - django-cors-headers
-- HTML5, CSS3, Bootstrap
-- JavaScript (ES Modules)
+- HTML, CSS, Bootstrap
+- JavaScript (ES modules)
 
-## Cómo ejecutar el proyecto
-1. Clona el repositorio y entra al directorio principal.
-2. Crea y activa un entorno virtual:
-	```
-	python -m venv Entorno360
-	# En Windows:
-	Entorno360\Scripts\activate
-	# En Linux/Mac:
-	source Entorno360/bin/activate
-	```
-3. Instala dependencias:
-	```
-	pip install -r requirements.txt
-	```
-4. Aplica migraciones y carga datos de ejemplo:
-	```
-	python manage.py migrate
-	python manage.py seed_libros
-	```
-5. Ejecuta el servidor:
-	```
-	python manage.py runserver
-	```
-6. Accede a http://127.0.0.1:8000/
+## Run locally
+1. Clone this repository.
+2. Create and activate a virtual environment.
 
-## Estado del proyecto
-- En producción interna. Código limpio, sin legacy ni dependencias innecesarias.
-- Catálogo, carrito, perfil y APIs funcionales y probados.
-- Listo para despliegue o ampliación.
+```bash
+python -m venv .venv
+# Windows
+.venv\Scripts\activate
+# Linux / macOS
+source .venv/bin/activate
+```
+
+3. Install dependencies.
+
+```bash
+pip install -r requirements.txt
+```
+
+4. Move into the Django project folder.
+
+```bash
+cd Campus360
+```
+
+5. Apply migrations and optional seed data.
+
+```bash
+python manage.py migrate
+python manage.py seed_libros
+python manage.py seed_peliculas
+```
+
+6. Run the development server.
+
+```bash
+python manage.py runserver
+```
+
+7. Open http://127.0.0.1:8000/
+
+## Notes
+- `.gitignore` already excludes virtual environments, local DB files, IDE folders, and temporary files.
+- For production, configure secrets and environment variables outside the repository.

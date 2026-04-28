@@ -20,6 +20,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie
 from decimal import Decimal
 import requests
+import unicodedata
 
 
 SESSION_CART_KEY = 'campus360_cart'
@@ -126,7 +127,11 @@ class DetalleOrdenViewSet(viewsets.ModelViewSet):
 # Vistas para renderizar plantillas HTML
 
 def index(request):
-    return render(request, 'Campus360_app/pages/home.html')
+    featured_books = Libro.objects.order_by('titulo')[:4]
+    context = {
+        'featured_books': featured_books,
+    }
+    return render(request, 'Campus360_app/pages/home.html', context)
 
 def biblioteca360(request):
     return render(request, 'Campus360_app/pages/biblioteca.html')
@@ -170,7 +175,25 @@ def logout(request):
 
 @login_required(login_url='/login/')
 def perfil(request):
-    return render(request, 'Campus360_app/pages/perfil.html')
+    latest_order = (
+        Orden.objects
+        .filter(usuario=request.user)
+        .order_by('-fecha')
+        .first()
+    )
+    purchase_count = Orden.objects.filter(usuario=request.user).count()
+    cart_count = sum(
+        int(item.get('cantidad', 1))
+        for item in request.session.get(SESSION_CART_KEY, {}).values()
+    )
+
+    context = {
+        'purchase_count': purchase_count,
+        'cart_count': cart_count,
+        'latest_order': latest_order,
+        'account_active': request.user.is_active,
+    }
+    return render(request, 'Campus360_app/pages/perfil.html', context)
 
 def registro(request):
     if request.method == 'POST':
@@ -364,48 +387,92 @@ def _map_open_library_doc_to_item(doc):
     }
 
 
+def _normalize_biblioteca_query(value):
+    return (
+        unicodedata.normalize('NFD', str(value or ''))
+        .encode('ascii', 'ignore')
+        .decode('ascii')
+        .strip()
+        .lower()
+    )
+
+
+def _get_biblioteca_query_variants(query):
+    base_query = str(query or '').strip()
+    if not base_query:
+        return []
+
+    normalized = _normalize_biblioteca_query(base_query)
+    synonym_map = {
+        'ingles': ['english', 'english language', 'english grammar'],
+        'english': ['ingles', 'idioma ingles', 'gramatica inglesa'],
+        'matematicas': ['mathematics', 'math'],
+        'programacion': ['programming', 'computer science'],
+    }
+
+    variants = [base_query]
+    variants.extend(synonym_map.get(normalized, []))
+
+    unique_variants = []
+    seen = set()
+    for term in variants:
+        key = _normalize_biblioteca_query(term)
+        if key and key not in seen:
+            seen.add(key)
+            unique_variants.append(term)
+
+    return unique_variants
+
+
 @api_view(['GET'])
 def biblioteca_search(request):
     query = (request.query_params.get('q') or '').strip()
     max_results_raw = request.query_params.get('maxResults', 20)
+    query_variants = _get_biblioteca_query_variants(query)
 
     try:
         max_results = max(1, min(int(max_results_raw), 40))
     except (TypeError, ValueError):
         max_results = 20
 
-    open_library_url = f'https://openlibrary.org/search.json?q={query}&limit={max_results}'
-
     # 1) Intento API externa principal (Open Library)
-    if query:
-        try:
-            response = requests.get(open_library_url, timeout=8)
-            if response.status_code == 200:
-                data = response.json()
-                docs = data.get('docs') or []
-                total_items = int(data.get('numFound') or 0)
-                items = [_map_open_library_doc_to_item(doc) for doc in docs]
-                if items:
-                    return Response(
-                        {
-                            'success': True,
-                            'source': 'openlibrary',
-                            'totalItems': total_items,
-                            'items': items,
-                        }
-                    )
-        except requests.exceptions.RequestException:
-            pass
+    if query_variants:
+        for term in query_variants:
+            try:
+                response = requests.get(
+                    'https://openlibrary.org/search.json',
+                    params={'q': term, 'limit': max_results},
+                    timeout=8,
+                )
+                if response.status_code == 200:
+                    data = response.json()
+                    docs = data.get('docs') or []
+                    total_items = int(data.get('numFound') or 0)
+                    items = [_map_open_library_doc_to_item(doc) for doc in docs]
+                    if items:
+                        return Response(
+                            {
+                                'success': True,
+                                'source': 'openlibrary',
+                                'totalItems': total_items,
+                                'items': items,
+                            }
+                        )
+            except requests.exceptions.RequestException:
+                continue
 
     # 2) Fallback local (BD)
     libros = Libro.objects.all()
-    if query:
-        libros = libros.filter(
-            Q(titulo__icontains=query)
-            | Q(autor__icontains=query)
-            | Q(genero__icontains=query)
-            | Q(editorial__icontains=query)
-        )
+    if query_variants:
+        local_query = Q()
+        for term in query_variants:
+            local_query |= (
+                Q(titulo__icontains=term)
+                | Q(autor__icontains=term)
+                | Q(genero__icontains=term)
+                | Q(editorial__icontains=term)
+            )
+        libros = libros.filter(local_query)
 
     libros = libros.order_by('titulo')
     total_local = libros.count()

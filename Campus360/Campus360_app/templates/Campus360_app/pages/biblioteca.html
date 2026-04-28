@@ -9,39 +9,79 @@
 
 {% block content %}
 <div class="biblioteca-page">
-<!-- Buscador -->
-<section class="mb-4 biblioteca-hero">
-    <h1 class="h3 mb-1">Biblioteca360</h1>
-    <p class="text-muted mb-4">Busca tu libro favorito en el catálogo global.</p>
-    <div class="row justify-content-center">
-        <div class="col-lg-6 col-md-8">
-            <div class="input-group" role="search">
-                <label for="search-box" class="visually-hidden">Buscar libro</label>
+    <section class="biblioteca-hero mb-4">
+        <div class="biblioteca-hero__content">
+            <p class="biblioteca-eyebrow mb-2">Exploracion academica</p>
+            <h1 class="h2 mb-3">Biblioteca360</h1>
+            <p class="biblioteca-lead mb-3">Explora libros académicos desde fuentes externas y descubre material útil para tus estudios.</p>
+            <p class="biblioteca-support mb-4">Busca por tema, autor o palabra clave. Si la fuente externa no está disponible, Campus360 mostrará recomendaciones locales.</p>
+        </div>
+
+        <div class="biblioteca-search-panel">
+            <div class="input-group biblioteca-search-group" role="search">
+                <label for="search-box" class="visually-hidden">Buscar referencias academicas</label>
                 <input id="search-box"
                        type="search"
                        class="form-control"
-                       placeholder="Ej: Python, Calculus, Historia..."
+                       placeholder="Ej: Python, Cálculo, Historia de Chile..."
                        autocomplete="off"
-                       aria-label="Buscar libro en Biblioteca360">
+                       aria-label="Buscar referencias académicas en Biblioteca360">
                 <button id="search" class="btn btn-accent" type="button"
-                        aria-label="Iniciar búsqueda">
+                        aria-label="Iniciar búsqueda académica">
                     Buscar
                 </button>
             </div>
+
+            <div class="biblioteca-quick-search" aria-label="Búsquedas rápidas">
+                <button type="button" class="biblioteca-chip" data-query="Python">Python</button>
+                <button type="button" class="biblioteca-chip" data-query="Matemáticas">Matemáticas</button>
+                <button type="button" class="biblioteca-chip" data-query="Historia">Historia</button>
+                <button type="button" class="biblioteca-chip" data-query="Programación">Programación</button>
+                <button type="button" class="biblioteca-chip" data-query="Ciencias">Ciencias</button>
+                <button type="button" class="biblioteca-chip" data-query="Ingeniería">Ingeniería</button>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- Estado live region para lectores de pantalla -->
-<div id="biblioteca-announcer" aria-live="polite" aria-atomic="true" class="visually-hidden"></div>
+    <section class="biblioteca-value row g-3 mb-4" aria-label="Valor de Biblioteca360">
+        <div class="col-12 col-md-4">
+            <article class="biblioteca-value-card h-100">
+                <p class="biblioteca-value-card__kicker mb-2">1</p>
+                <h2 class="h5 mb-2">Búsqueda académica</h2>
+                <p class="mb-0">Encuentra libros por tema, autor o palabra clave.</p>
+            </article>
+        </div>
+        <div class="col-12 col-md-4">
+            <article class="biblioteca-value-card h-100">
+                <p class="biblioteca-value-card__kicker mb-2">2</p>
+                <h2 class="h5 mb-2">Fuente externa</h2>
+                <p class="mb-0">Consulta resultados desde una API pública de libros.</p>
+            </article>
+        </div>
+        <div class="col-12 col-md-4">
+            <article class="biblioteca-value-card h-100">
+                <p class="biblioteca-value-card__kicker mb-2">3</p>
+                <h2 class="h5 mb-2">Apoyo al estudio</h2>
+                <p class="mb-0">Usa los resultados como referencia para tus asignaturas.</p>
+            </article>
+        </div>
+    </section>
 
-<!-- Resultados -->
-<section class="book-list" aria-label="Resultados de búsqueda">
-    <h2 class="h5 mb-3">Resultados</h2>
-    <div id="list-output">
-        <div class="row g-3"></div>
-    </div>
-</section>
+    <div id="biblioteca-announcer" aria-live="polite" aria-atomic="true" class="visually-hidden"></div>
+
+    <section class="book-list" aria-label="Resultados de búsqueda">
+        <div class="biblioteca-results-header mb-3">
+            <div>
+                <p class="biblioteca-section-label mb-1">Referencia y exploración</p>
+                <h2 class="h4 mb-0">Resultados</h2>
+            </div>
+        </div>
+
+        <div id="list-output" data-catalog-url="{% url 'venta_libro' %}">
+            <div class="biblioteca-state"></div>
+            <div class="row g-3"></div>
+        </div>
+    </section>
 </div>
 {% endblock %}
 

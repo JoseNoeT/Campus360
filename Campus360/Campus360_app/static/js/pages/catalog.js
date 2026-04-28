@@ -141,6 +141,88 @@ function updateCatalogCount(count) {
     if (el) el.textContent = count ?? '—';
 }
 
+function iconForGenre(genre) {
+    const text = String(genre || '').toLowerCase();
+    if (text.includes('accion')) return '💥';
+    if (text.includes('ciencia')) return '🛸';
+    if (text.includes('drama')) return '🎭';
+    if (text.includes('comedia')) return '😂';
+    if (text.includes('terror')) return '👻';
+    if (text.includes('animacion')) return '🎞️';
+    if (text.includes('romance')) return '❤️';
+    if (text.includes('aventura')) return '🧭';
+    return '🎬';
+}
+
+function renderCategoryChips(genres) {
+    const container = $("#catalog-categories-list");
+    if (!container || !Array.isArray(genres) || !genres.length) return;
+
+    container.innerHTML = '';
+
+    genres.slice(0, 10).forEach((genre) => {
+        const button = document.createElement('button');
+        button.className = 'category-chip';
+        button.type = 'button';
+        button.dataset.category = genre;
+        button.setAttribute('aria-label', `Filtrar por ${genre}`);
+        button.textContent = `${iconForGenre(genre)} ${genre}`;
+        container.appendChild(button);
+    });
+}
+
+function syncActiveCategoryChip() {
+    $$(".category-chip").forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.category === catalogState.genero && !!catalogState.genero);
+    });
+}
+
+async function loadGenreOptions() {
+    const select = $("#catalog-genero");
+    if (!select) return;
+
+    const prevValue = catalogState.genero || select.value || "";
+
+    try {
+        const response = await fetch('/api/libros/', { credentials: 'include' });
+        if (!response.ok) throw new Error('No se pudo cargar géneros');
+
+        const libros = await response.json();
+        const genres = Array.from(
+            new Set(
+                (Array.isArray(libros) ? libros : [])
+                    .map((item) => String(item?.genero || '').trim())
+                    .filter(Boolean)
+            )
+        ).sort((a, b) => a.localeCompare(b, 'es'));
+
+        catalogState.genres = genres;
+        select.innerHTML = '<option value="">Todos los géneros</option>';
+
+        genres.forEach((genre) => {
+            const opt = document.createElement('option');
+            opt.value = genre;
+            opt.textContent = genre;
+            select.appendChild(opt);
+        });
+
+        if (prevValue && genres.includes(prevValue)) {
+            select.value = prevValue;
+            catalogState.genero = prevValue;
+        } else {
+            select.value = '';
+            catalogState.genero = '';
+        }
+
+        renderCategoryChips(genres);
+        syncActiveCategoryChip();
+
+        debugLog('catalog', 'Opciones de género actualizadas', { totalGeneros: genres.length });
+    } catch (error) {
+        debugLog('catalog', 'No se pudieron cargar géneros dinámicos', error?.message || error);
+    }
+}
+
 async function fetchLibros(params = {}) {
     catalogState.loading = true;
     catalogState.error = null;
@@ -334,6 +416,7 @@ function clearFilters() {
     catalogState.min = "";
     catalogState.max = "";
     catalogState.page = 1;
+    syncActiveCategoryChip();
     updateURL();
     fetchLibros();
 }
@@ -369,6 +452,7 @@ function handleSearch(e) {
 function handleGenero(e) {
     catalogState.genero = e.target.value;
     catalogState.page = 1;
+    syncActiveCategoryChip();
     updateURL();
     fetchLibros();
 }
@@ -395,25 +479,32 @@ function handleMax(e) {
 }
 
 function handleCategoryChip(e) {
-    const cat = e.target.dataset.category;
+    const chip = e.target.closest('.category-chip');
+    const cat = chip?.dataset?.category;
     if (cat) {
         $("#catalog-genero").value = cat;
         catalogState.genero = cat;
         catalogState.page = 1;
+        syncActiveCategoryChip();
         updateURL();
         fetchLibros();
     }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     $("#catalog-search").addEventListener("input", debounce(handleSearch, 300));
     $("#catalog-genero").addEventListener("change", handleGenero);
     $("#catalog-ordering").addEventListener("change", handleOrdering);
     $("#catalog-min").addEventListener("input", debounce(handleMin, 300));
     $("#catalog-max").addEventListener("input", debounce(handleMax, 300));
-    $$(".category-chip").forEach(btn => btn.addEventListener("click", handleCategoryChip));
+    const categoriesContainer = $("#catalog-categories-list");
+    if (categoriesContainer) {
+        categoriesContainer.addEventListener("click", handleCategoryChip);
+    }
     $("#catalog-clear").addEventListener("click", clearFilters);
     $("#catalog-apply").addEventListener("click", fetchLibros);
+
+    await loadGenreOptions();
     fetchLibros();
 });
 

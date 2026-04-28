@@ -104,6 +104,25 @@
     flex-wrap: wrap;
 }
 
+.hero__microcopy {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-top: 1rem;
+}
+
+.hero__microcopy span {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: var(--text-xs);
+    font-weight: 600;
+}
+
 /* Outline button that works on dark image background */
 .btn-hero-outline {
     background: transparent;
@@ -190,5 +209,184 @@
 /* --- Dark mode hero (overlay stays, no changes needed) */
 [data-theme="dark"] .hero {
     box-shadow: var(--shadow-hover);
+}
+
+.home-page {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.home-section {
+    display: grid;
+    gap: 1rem;
+}
+
+.home-section__header {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.home-section__header--split {
+    align-items: end;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+}
+
+.home-section__eyebrow {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0;
+}
+
+.home-section__title {
+    margin: 0;
+}
+
+.home-section__subtitle {
+    margin: 0;
+    color: var(--color-muted);
+    max-width: 60rem;
+}
+
+.quick-action-card,
+.system-value-card,
+.featured-book-card,
+.goal-card,
+.home-empty-state {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sm);
+}
+
+.quick-action-card,
+.goal-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    height: 100%;
+    padding: 1.1rem;
+    color: inherit;
+    text-decoration: none;
+    transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+}
+
+.quick-action-card:hover,
+.quick-action-card:focus-visible,
+.goal-card:hover,
+.goal-card:focus-visible {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--color-primary) 45%, var(--color-border));
+    box-shadow: var(--shadow-hover);
+}
+
+.quick-action-card__icon,
+.system-value-card__icon,
+.goal-card__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.9rem;
+    background: color-mix(in srgb, var(--color-primary) 12%, var(--color-surface));
+    font-size: 1.45rem;
+}
+
+.system-value-card {
+    height: 100%;
+    padding: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.featured-book-card {
+    height: 100%;
+    overflow: hidden;
+}
+
+.featured-book-card__media {
+    aspect-ratio: 4 / 5;
+    background: var(--color-surface-2);
+}
+
+.featured-book-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.featured-book-card__body {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 14rem;
+}
+
+.featured-book-card__genre {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+.featured-book-card__author,
+.featured-book-card__meta {
+    color: var(--color-muted);
+    font-size: var(--text-sm);
+}
+
+.featured-book-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.featured-book-card__price {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.goal-card {
+    justify-content: space-between;
+}
+
+.home-empty-state {
+    padding: 1.2rem;
+}
+
+.home-empty-state__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+@media (max-width: 991px) {
+    .home-section__header--split {
+        grid-template-columns: 1fr;
+        align-items: start;
+    }
+}
+
+@media (max-width: 767px) {
+    .hero__microcopy {
+        justify-content: center;
+    }
+
+    .featured-book-card__footer,
+    .home-empty-state__actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
 }
 

@@ -3,71 +3,132 @@
 
 {% block title %}Calculadora de Notas | Campus360{% endblock %}
 
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/pages/calculator.css' %}">
+{% endblock %}
+
 {% block content %}
-<section class="row justify-content-center">
-    <div class="col-lg-6 col-md-8">
-        <h1 class="h3 mb-4">Calculadora de Notas</h1>
-        <article class="auth-card p-4">
-            <form id="calculator-form" novalidate>
-                <div class="additional-notes">
-                    <div class="mb-3">
-                        <label for="nota1" class="form-label">Nota 1</label>
-                        <input type="number" class="form-control" id="nota1" min="20" max="70" name="nota1" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="nota2" class="form-label">Nota 2</label>
-                        <input type="number" class="form-control" id="nota2" min="20" max="70" name="nota2" required>
-                    </div>
-                </div>
-
-                <div class="d-flex gap-2 mb-3">
-                    <button type="button" class="btn btn-outline-secondary btn-sm" id="add-note-btn">+ Añadir nota</button>
-                    <button type="button" class="btn btn-outline-danger btn-sm" id="delete-note">− Eliminar</button>
-                </div>
-
-                <hr>
-
-                <div class="mb-3">
-                    <label for="nota_examen" class="form-label">Nota del Examen</label>
-                    <input type="number" class="form-control" id="nota_examen" min="20" max="70" name="nota_examen">
-                </div>
-                <div class="mb-3">
-                    <label for="promedio" class="form-label">Promedio</label>
-                    <input type="number" class="form-control" id="promedio" name="promedio" placeholder="Resultado" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="nota_final" class="form-label">Nota Final</label>
-                    <input type="number" class="form-control" id="nota_final" name="nota_final" readonly>
-                </div>
-
-                <button type="submit" class="btn btn-accent w-100" onclick="calcularNota()">Calcular</button>
-            </form>
-        </article>
-
-        <div class="mt-3">
-            <a href="{% url 'index' %}" class="btn btn-outline-secondary btn-sm">← Volver</a>
+<section class="calculator-page">
+    <header class="calculator-hero mb-4">
+        <h1 class="h3 mb-2">Calculadora de Notas</h1>
+        <p class="calculator-subtitle mb-3">
+            Simula tus evaluaciones, calcula tu promedio y descubre qué nota necesitas para aprobar.
+        </p>
+        <div class="calculator-chips" aria-label="Características de la herramienta">
+            <span class="calculator-chip">Escala 2.0 a 7.0</span>
+            <span class="calculator-chip">Simulación académica</span>
+            <span class="calculator-chip">Resultado inmediato</span>
         </div>
+    </header>
+
+    <div class="calculator-layout row g-4">
+        <div class="col-12 col-lg-7">
+            <article class="calculator-card h-100">
+                <div class="calculator-card__header">
+                    <h2 class="h5 mb-1">Ingresa tus notas</h2>
+                    <p class="text-muted mb-0">Completa tus evaluaciones y calcula el resultado estimado.</p>
+                </div>
+
+                <form id="calculator-form" novalidate>
+                    <div id="calculator-error" class="calculator-alert" role="alert" aria-live="assertive" hidden></div>
+
+                    <div class="additional-notes">
+                        <div class="mb-3 calculator-note-group">
+                            <label for="nota1" class="form-label">Nota 1</label>
+                            <input type="number" class="form-control note-input" id="nota1" min="2" max="7" step="0.1" inputmode="decimal" name="nota1" required>
+                        </div>
+                        <div class="mb-3 calculator-note-group">
+                            <label for="nota2" class="form-label">Nota 2</label>
+                            <input type="number" class="form-control note-input" id="nota2" min="2" max="7" step="0.1" inputmode="decimal" name="nota2" required>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 mb-3 flex-wrap">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="add-note-btn">+ Añadir nota</button>
+                        <button type="button" class="btn btn-outline-danger btn-sm" id="delete-note">− Eliminar última nota</button>
+                    </div>
+
+                    <hr class="calculator-divider">
+
+                    <div class="calculator-config-grid">
+                        <div class="mb-3">
+                            <label for="partial_weight" class="form-label">Peso de notas parciales (%)</label>
+                            <input type="number" class="form-control" id="partial_weight" min="0" max="100" step="1" name="partial_weight" value="60">
+                        </div>
+                        <div class="mb-3">
+                            <label for="exam_weight" class="form-label">Peso del examen (%)</label>
+                            <input type="number" class="form-control" id="exam_weight" min="0" max="100" step="1" name="exam_weight" value="40">
+                        </div>
+                        <div class="mb-3 calculator-config-grid__full">
+                            <label for="minimum_grade" class="form-label">Nota mínima de aprobación</label>
+                            <input type="number" class="form-control" id="minimum_grade" min="2" max="7" step="0.1" inputmode="decimal" name="minimum_grade" value="4.0">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="nota_examen" class="form-label">Nota del Examen</label>
+                        <input type="number" class="form-control" id="nota_examen" min="2" max="7" step="0.1" inputmode="decimal" name="nota_examen">
+                    </div>
+
+                    <div class="calculator-result-grid">
+                        <div class="mb-3">
+                        <label for="promedio" class="form-label">Promedio</label>
+                            <input type="text" class="form-control" id="promedio" name="promedio" placeholder="Resultado" readonly>
+                        </div>
+                        <div class="mb-3">
+                        <label for="nota_final" class="form-label">Nota Final</label>
+                            <input type="text" class="form-control" id="nota_final" name="nota_final" readonly>
+                        </div>
+                    </div>
+
+                    <div class="calculator-actions">
+                        <button type="submit" class="btn btn-accent">Calcular nota</button>
+                        <button type="button" class="btn btn-outline-secondary" id="clear-calculator-btn">Limpiar</button>
+                    </div>
+                </form>
+            </article>
+        </div>
+
+        <div class="col-12 col-lg-5">
+            <aside class="calculator-card calculator-summary h-100" aria-live="polite" aria-atomic="true">
+                <div class="calculator-card__header">
+                    <h2 class="h5 mb-1">Resumen académico</h2>
+                    <p class="text-muted mb-0">Vista rápida del avance de tu simulación.</p>
+                </div>
+
+                <ul class="calculator-summary-list" aria-label="Resumen temporal de resultados">
+                    <li>
+                        <span class="label">Promedio actual</span>
+                        <strong class="value" id="summary-average">—</strong>
+                    </li>
+                    <li>
+                        <span class="label">Nota final estimada</span>
+                        <strong class="value" id="summary-final-grade">—</strong>
+                    </li>
+                    <li>
+                        <span class="label">Nota necesaria en examen</span>
+                        <strong class="value" id="summary-required-grade">—</strong>
+                    </li>
+                    <li>
+                        <span class="label">Estado académico</span>
+                        <strong class="value pending" id="summary-status">Pendiente</strong>
+                    </li>
+                </ul>
+
+                <div class="calculator-tip" role="note">
+                    <h3 class="h6 mb-2">Consejo académico</h3>
+                    <p class="mb-0" id="summary-advice">Completa tus notas para obtener una recomendación.</p>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a href="{% url 'index' %}" class="btn btn-outline-secondary btn-sm">← Volver</a>
     </div>
 </section>
 {% endblock %}
 
 {% block scripts %}
-<script>
-    function calcularNota() {
-        const nota1 = parseFloat(document.getElementById('nota1').value);
-        const nota2 = parseFloat(document.getElementById('nota2').value);
-        const additionalNotes = $('.additional-notes div').map(function () {
-            return parseFloat($(this).find('input').val());
-        }).get();
-        const notaExamen = parseFloat(document.getElementById('nota_examen').value);
-        const sumaAdditional = additionalNotes.reduce((a, b) => a + b, 0);
-        const promedio = (nota1 + nota2 + sumaAdditional) / (2 + additionalNotes.length);
-        const notaFinal = (promedio + notaExamen) / 2;
-        document.getElementById('promedio').value = promedio.toFixed(2);
-        document.getElementById('nota_final').value = notaFinal.toFixed(2);
-    }
-</script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
-<script src="{% static 'JQuery/calculo_nota_validate.js' %}"></script>
+<script src="{% static 'js/pages/calculator.js' %}"></script>
 {% endblock %}
