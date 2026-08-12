@@ -12,112 +12,119 @@
     <header class="calculator-hero mb-4">
         <h1 class="h3 mb-2">Calculadora de Notas</h1>
         <p class="calculator-subtitle mb-3">
-            Simula tus evaluaciones, calcula tu promedio y descubre qué nota necesitas para aprobar.
+            Simula tu rendimiento académico con ponderaciones individuales por evaluación.
         </p>
         <div class="calculator-chips" aria-label="Características de la herramienta">
             <span class="calculator-chip">Escala 2.0 a 7.0</span>
-            <span class="calculator-chip">Simulación académica</span>
-            <span class="calculator-chip">Resultado inmediato</span>
+            <span class="calculator-chip">Ponderación universitaria</span>
+            <span class="calculator-chip">Resultado en tiempo real</span>
+            <span class="calculator-chip">Nota necesaria calculada</span>
         </div>
     </header>
 
     <div class="calculator-layout row g-4">
+        <!-- Panel izquierdo: evaluaciones -->
         <div class="col-12 col-lg-7">
             <article class="calculator-card h-100">
                 <div class="calculator-card__header">
-                    <h2 class="h5 mb-1">Ingresa tus notas</h2>
-                    <p class="text-muted mb-0">Completa tus evaluaciones y calcula el resultado estimado.</p>
+                    <h2 class="h5 mb-1">Evaluaciones del curso</h2>
+                    <p class="text-muted mb-0">Ingresa nombre, nota y ponderación de cada evaluación. Las notas en blanco se consideran pendientes.</p>
                 </div>
 
                 <form id="calculator-form" novalidate>
                     <div id="calculator-error" class="calculator-alert" role="alert" aria-live="assertive" hidden></div>
 
-                    <div class="additional-notes">
-                        <div class="mb-3 calculator-note-group">
-                            <label for="nota1" class="form-label">Nota 1</label>
-                            <input type="number" class="form-control note-input" id="nota1" min="2" max="7" step="0.1" inputmode="decimal" name="nota1" required>
-                        </div>
-                        <div class="mb-3 calculator-note-group">
-                            <label for="nota2" class="form-label">Nota 2</label>
-                            <input type="number" class="form-control note-input" id="nota2" min="2" max="7" step="0.1" inputmode="decimal" name="nota2" required>
-                        </div>
+                    <!-- lista de evaluaciones -->
+                    <div id="evaluations-list" class="evaluations-list" aria-label="Lista de evaluaciones del curso"></div>
+
+                    <div class="weight-summary" id="weight-summary" aria-live="polite">
+                        <span class="weight-summary__label">Suma de ponderaciones:</span>
+                        <strong id="weight-total" class="weight-summary__value">0%</strong>
                     </div>
 
-                    <div class="d-flex gap-2 mb-3 flex-wrap">
-                        <button type="button" class="btn btn-outline-secondary btn-sm" id="add-note-btn">+ Añadir nota</button>
-                        <button type="button" class="btn btn-outline-danger btn-sm" id="delete-note">− Eliminar última nota</button>
+                    <div class="calculator-eval-actions">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="add-eval-btn">
+                            + Agregar evaluación
+                        </button>
                     </div>
 
                     <hr class="calculator-divider">
 
-                    <div class="calculator-config-grid">
-                        <div class="mb-3">
-                            <label for="partial_weight" class="form-label">Peso de notas parciales (%)</label>
-                            <input type="number" class="form-control" id="partial_weight" min="0" max="100" step="1" name="partial_weight" value="60">
-                        </div>
-                        <div class="mb-3">
-                            <label for="exam_weight" class="form-label">Peso del examen (%)</label>
-                            <input type="number" class="form-control" id="exam_weight" min="0" max="100" step="1" name="exam_weight" value="40">
-                        </div>
-                        <div class="mb-3 calculator-config-grid__full">
-                            <label for="minimum_grade" class="form-label">Nota mínima de aprobación</label>
-                            <input type="number" class="form-control" id="minimum_grade" min="2" max="7" step="0.1" inputmode="decimal" name="minimum_grade" value="4.0">
-                        </div>
+                    <div class="calculator-config-single">
+                        <label for="minimum_grade" class="form-label">Nota mínima de aprobación</label>
+                        <input type="number" class="form-control" id="minimum_grade"
+                               min="2" max="7" step="0.1" inputmode="decimal"
+                               name="minimum_grade" value="4.0"
+                               aria-describedby="minimum-grade-hint">
+                        <small id="minimum-grade-hint" class="text-muted">Valor entre 2.0 y 7.0. Por defecto 4.0.</small>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="nota_examen" class="form-label">Nota del Examen</label>
-                        <input type="number" class="form-control" id="nota_examen" min="2" max="7" step="0.1" inputmode="decimal" name="nota_examen">
-                    </div>
-
-                    <div class="calculator-result-grid">
-                        <div class="mb-3">
-                        <label for="promedio" class="form-label">Promedio</label>
-                            <input type="text" class="form-control" id="promedio" name="promedio" placeholder="Resultado" readonly>
-                        </div>
-                        <div class="mb-3">
-                        <label for="nota_final" class="form-label">Nota Final</label>
-                            <input type="text" class="form-control" id="nota_final" name="nota_final" readonly>
-                        </div>
-                    </div>
-
-                    <div class="calculator-actions">
-                        <button type="submit" class="btn btn-accent">Calcular nota</button>
+                    <div class="calculator-actions mt-3">
+                        <button type="submit" class="btn btn-accent">Calcular</button>
                         <button type="button" class="btn btn-outline-secondary" id="clear-calculator-btn">Limpiar</button>
                     </div>
                 </form>
             </article>
         </div>
 
+        <!-- Panel derecho: resumen -->
         <div class="col-12 col-lg-5">
-            <aside class="calculator-card calculator-summary h-100" aria-live="polite" aria-atomic="true">
+            <aside class="calculator-card calculator-summary" aria-live="polite" aria-atomic="true">
                 <div class="calculator-card__header">
                     <h2 class="h5 mb-1">Resumen académico</h2>
-                    <p class="text-muted mb-0">Vista rápida del avance de tu simulación.</p>
+                    <p class="text-muted mb-0">Análisis ponderado en tiempo real.</p>
                 </div>
 
-                <ul class="calculator-summary-list" aria-label="Resumen temporal de resultados">
+                <ul class="calculator-summary-list" aria-label="Resultados del análisis ponderado">
                     <li>
-                        <span class="label">Promedio actual</span>
+                        <span class="label">Puntos acumulados</span>
+                        <strong class="value" id="summary-points">—</strong>
+                    </li>
+                    <li>
+                        <span class="label">Promedio ponderado actual</span>
                         <strong class="value" id="summary-average">—</strong>
                     </li>
                     <li>
-                        <span class="label">Nota final estimada</span>
+                        <span class="label">Ponderación rendida</span>
+                        <strong class="value" id="summary-completed-weight">—</strong>
+                    </li>
+                    <li>
+                        <span class="label">Ponderación pendiente</span>
+                        <strong class="value" id="summary-pending-weight">—</strong>
+                    </li>
+                    <li>
+                        <span class="label">Nota final proyectada</span>
                         <strong class="value" id="summary-final-grade">—</strong>
                     </li>
                     <li>
-                        <span class="label">Nota necesaria en examen</span>
+                        <span class="label">Nota necesaria en pendientes</span>
                         <strong class="value" id="summary-required-grade">—</strong>
                     </li>
                     <li>
                         <span class="label">Estado académico</span>
-                        <strong class="value pending" id="summary-status">Pendiente</strong>
+                        <strong class="value calculator-status calculator-status--pending" id="summary-status">Pendiente</strong>
                     </li>
                 </ul>
 
+                <section class="calculator-progress" aria-label="Progreso académico de ponderación">
+                    <div class="calculator-progress__head">
+                        <span class="label">Ponderación rendida:</span>
+                        <strong class="value" id="summary-progress-completed">0%</strong>
+                    </div>
+                    <div id="summary-progress-track" class="calculator-progress__track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Ponderación rendida">
+                        <span id="summary-progress-bar" class="calculator-progress__bar" style="width: 0%;"></span>
+                    </div>
+                    <p class="calculator-progress__pending mb-0">Ponderación pendiente: <strong id="summary-progress-pending">100%</strong></p>
+                </section>
+
                 <div class="calculator-tip" role="note">
                     <h3 class="h6 mb-2">Consejo académico</h3>
-                    <p class="mb-0" id="summary-advice">Completa tus notas para obtener una recomendación.</p>
+                    <p class="mb-0" id="summary-advice">Ingresa tus primeras notas para iniciar el análisis académico.</p>
+                </div>
+
+                <div class="calculator-method" role="note">
+                    <h3 class="h6 mb-2">¿Cómo se calcula?</h3>
+                    <p class="mb-0">La nota se calcula mediante promedio ponderado. Cada evaluación aporta a la nota final según su porcentaje. Las evaluaciones sin nota se consideran pendientes y no se cuentan como cero.</p>
                 </div>
             </aside>
         </div>

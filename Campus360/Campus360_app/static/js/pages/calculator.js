@@ -1,9 +1,282 @@
-function parseGradeValue(value) {
+﻿/**
+ * Campus360 — Calculadora de Notas Ponderada (FASE 4)
+ * Sistema universitario con ponderacion individual por evaluacion.
+ */
+
+const DEFAULT_EVALUATIONS = [
+    { id: 'eval-1', name: 'Prueba n\u00b01', grade: null, weight: 32 },
+    { id: 'eval-2', name: 'Prueba n\u00b02', grade: null, weight: 12 },
+    { id: 'eval-3', name: 'Prueba n\u00b03', grade: null, weight: 32 },
+    { id: 'eval-4', name: 'Prueba n\u00b04', grade: null, weight: 12 },
+    { id: 'eval-5', name: 'Prueba n\u00b05', grade: null, weight: 12 },
+];
+
+let evaluations = [];
+let evalIdCounter = DEFAULT_EVALUATIONS.length + 1;
+
+function parseGrade(value) {
     if (value === null || value === undefined) return null;
     const normalized = String(value).trim().replace(',', '.');
     if (!normalized) return null;
-    const parsed = Number.parseFloat(normalized);
-    return Number.isFinite(parsed) ? parsed : Number.NaN;
+    const parsed = parseFloat(normalized);
+    return isFinite(parsed) ? parsed : NaN;
+}
+
+function formatGrade(value) {
+    return isFinite(value) ? value.toFixed(2) : '\u2014';
+}
+
+function formatPercent(value) {
+    if (!isFinite(value)) return '0%';
+    const rounded = Math.round(value * 10) / 10;
+    return `${Number.isInteger(rounded) ? rounded.toFixed(0) : rounded.toFixed(1)}%`;
+}
+
+function getEvaluations() { return evaluations; }
+
+function calculateAccumulatedPoints(evals) {
+    return evals.filter(e => e.grade !== null && isFinite(e.grade))
+        .reduce((acc, e) => acc + e.grade * (e.weight / 100), 0);
+}
+
+function calculateCompletedWeight(evals) {
+    return evals.filter(e => e.grade !== null && isFinite(e.grade))
+        .reduce((acc, e) => acc + e.weight, 0);
+}
+
+function calculatePendingWeight(evals) {
+    return 100 - calculateCompletedWeight(evals);
+}
+
+function calculateCurrentWeightedAverage(evals) {
+    const completedWeight = calculateCompletedWeight(evals);
+    if (completedWeight === 0) return null;
+    return calculateAccumulatedPoints(evals) / (completedWeight / 100);
+}
+
+function calculateProjectedFinalGrade(evals) {
+    const allHaveGrade = evals.length > 0 && evals.every(e => e.grade !== null && isFinite(e.grade));
+    if (!allHaveGrade) return null;
+    return calculateAccumulatedPoints(evals);
+}
+
+function calculateRequiredPendingAverage(evals, minimumGrade) {
+    const pendingWeight = calculatePendingWeight(evals);
+    if (pendingWeight <= 0) return null;
+    const accumulated = calculateAccumulatedPoints(evals);
+    return (minimumGrade - accumulated) / (pendingWeight / 100);
+}
+
+function getStatusInfo(evals, minimumGrade) {
+    const hasAnyGrade = evals.some(e => e.grade !== null && isFinite(e.grade));
+    if (!hasAnyGrade) {
+        return { status: 'Pendiente', statusClass: 'calculator-status--pending', advice: 'Ingresa tus primeras notas para iniciar el analisis academico.' };
+    }
+    const projected = calculateProjectedFinalGrade(evals);
+    if (projected !== null) {
+        if (projected >= minimumGrade) return { status: 'Aprobado', statusClass: 'calculator-status--success', advice: 'Tu avance actual es favorable. Manten un rendimiento constante en lo pendiente.' };
+        return { status: 'Reprobado', statusClass: 'calculator-status--danger', advice: 'Con los datos actuales, aprobar no es matematicamente alcanzable solo con lo pendiente.' };
+    }
+    const required = calculateRequiredPendingAverage(evals, minimumGrade);
+    if (required === null) return { status: 'Pendiente', statusClass: 'calculator-status--pending', advice: 'Ingresa tus notas para analizar tu situacion.' };
+    if (required < 2) return { status: 'Buen escenario', statusClass: 'calculator-status--success', advice: 'Tu avance actual es favorable. Manten un rendimiento constante en lo pendiente.' };
+    if (required > 7) return { status: 'No alcanzable', statusClass: 'calculator-status--danger', advice: 'Con los datos actuales, aprobar no es matematicamente alcanzable solo con lo pendiente.' };
+    if (required >= 6) return { status: 'En riesgo', statusClass: 'calculator-status--warning', advice: 'Estas cerca del limite. Prioriza las evaluaciones con mayor ponderacion.' };
+    return { status: 'Alcanzable', statusClass: 'calculator-status--info', advice: `Necesitas promediar ${formatGrade(required)} en las evaluaciones pendientes para alcanzar la nota minima.` };
+}
+
+function validateEvaluation(evaluation) {
+    const errors = [];
+    if (!evaluation.name.trim()) errors.push('Una evaluacion no tiene nombre. Completa todos los nombres.');
+    if (evaluation.grade !== null && (!isFinite(evaluation.grade) || evaluation.grade < 2 || evaluation.grade > 7)) {
+        errors.push(`La nota de "${evaluation.name || 'una evaluacion'}" debe estar entre 2.0 y 7.0.`);
+    }
+    if (!isFinite(evaluation.weight) || evaluation.weight < 0 || evaluation.weight > 100) {
+        errors.push(`La ponderacion de "${evaluation.name || 'una evaluacion'}" debe estar entre 0 y 100.`);
+    }
+    return errors;
+}
+
+function validateWeights(evals) {
+    const total = evals.reduce((acc, e) => acc + (isFinite(e.weight) ? e.weight : 0), 0);
+    const rounded = Math.round(total * 100) / 100;
+    if (rounded !== 100) return `La suma de ponderaciones debe ser 100%. Actualmente suma ${rounded}%.`;
+    return null;
+}
+
+function setFieldInvalid(input, invalid) {
+    if (!input) return;
+    input.classList.toggle('is-invalid', !!invalid);
+    input.setAttribute('aria-invalid', invalid ? 'true' : 'false');
+}
+
+function showValidationError(message) {
+    const alert = document.getElementById('calculator-error');
+    if (!alert) return;
+    alert.textContent = message;
+    alert.hidden = false;
+    alert.focus();
+}
+
+function clearValidationError() {
+    const alert = document.getElementById('calculator-error');
+    if (!alert) return;
+    alert.hidden = true;
+    alert.textContent = '';
+    document.querySelectorAll('#calculator-form .is-invalid').forEach(el => {
+        el.classList.remove('is-invalid');
+        el.setAttribute('aria-invalid', 'false');
+    });
+}
+
+function focusFirstInvalidField() {
+    const first = document.querySelector('#calculator-form .is-invalid');
+    if (first) first.focus();
+}
+
+function escapeAttr(str) {
+    return String(str || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function renderEvaluations() {
+    const list = document.getElementById('evaluations-list');
+    if (!list) return;
+    list.innerHTML = '';
+    evaluations.forEach((ev, index) => {
+        const item = document.createElement('div');
+        item.className = 'evaluation-item';
+        item.dataset.evalId = ev.id;
+        const canRemove = evaluations.length > 1;
+        item.innerHTML = `
+            <div class="evaluation-item__header">
+                <span class="evaluation-item__number" aria-hidden="true">${index + 1}</span>
+                <div class="evaluation-item__name-wrap">
+                    <label for="name-${ev.id}" class="visually-hidden">Nombre de la evaluacion ${index + 1}</label>
+                    <input type="text" id="name-${ev.id}" class="form-control evaluation-name" placeholder="Nombre de la evaluacion" value="${escapeAttr(ev.name)}" data-eval-id="${ev.id}" data-field="name" aria-label="Nombre de evaluacion ${index + 1}">
+                </div>
+                ${canRemove ? `<button type="button" class="btn btn-outline-danger btn-sm evaluation-remove" data-eval-id="${ev.id}" aria-label="Eliminar ${escapeAttr(ev.name) || 'evaluacion ' + (index + 1)}">&times;</button>` : ''}
+            </div>
+            <div class="evaluation-item__fields">
+                <div class="evaluation-field">
+                    <label for="grade-${ev.id}" class="form-label">Nota</label>
+                    <input type="number" id="grade-${ev.id}" class="form-control evaluation-grade" placeholder="Vacio = pendiente" min="2" max="7" step="0.1" inputmode="decimal" value="${ev.grade !== null ? ev.grade : ''}" data-eval-id="${ev.id}" data-field="grade" aria-label="Nota de ${escapeAttr(ev.name) || 'evaluacion ' + (index + 1)}">
+                </div>
+                <div class="evaluation-field">
+                    <label for="weight-${ev.id}" class="form-label">Ponderacion %</label>
+                    <input type="number" id="weight-${ev.id}" class="form-control evaluation-weight" placeholder="0-100" min="0" max="100" step="0.1" inputmode="decimal" value="${ev.weight}" data-eval-id="${ev.id}" data-field="weight" aria-label="Ponderacion de ${escapeAttr(ev.name) || 'evaluacion ' + (index + 1)}">
+                </div>
+            </div>
+        `;
+        list.appendChild(item);
+    });
+    updateWeightTotal();
+}
+
+function updateWeightTotal() {
+    const totalEl = document.getElementById('weight-total');
+    const summaryEl = document.getElementById('weight-summary');
+    if (!totalEl || !summaryEl) return;
+    const total = evaluations.reduce((acc, e) => acc + (isFinite(e.weight) ? e.weight : 0), 0);
+    const rounded = Math.round(total * 100) / 100;
+    totalEl.textContent = `${rounded}%`;
+    const isOk = rounded === 100;
+    totalEl.className = `weight-summary__value ${isOk ? 'weight-ok' : 'weight-warn'}`;
+    summaryEl.setAttribute('aria-label', `Suma de ponderaciones: ${rounded}%. ${isOk ? 'Correcto.' : 'Debe sumar 100%.'}`);
+}
+
+function renderSummary() {
+    const minimumGrade = parseGrade(document.getElementById('minimum_grade')?.value) ?? 4;
+    const evals = getEvaluations();
+    const accumulated = calculateAccumulatedPoints(evals);
+    const completedWeight = calculateCompletedWeight(evals);
+    const pendingWeight = calculatePendingWeight(evals);
+    const average = calculateCurrentWeightedAverage(evals);
+    const projected = calculateProjectedFinalGrade(evals);
+    const required = calculateRequiredPendingAverage(evals, minimumGrade);
+    const { status, statusClass, advice } = getStatusInfo(evals, minimumGrade);
+
+    const set = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
+
+    set('summary-points', formatGrade(accumulated));
+    set('summary-average', average !== null ? formatGrade(average) : '\u2014');
+    set('summary-completed-weight', formatPercent(completedWeight));
+    set('summary-pending-weight', formatPercent(pendingWeight));
+    set('summary-final-grade', projected !== null ? formatGrade(projected) : 'Pendiente');
+
+    if (required === null) set('summary-required-grade', '\u2014');
+    else if (!isFinite(required) || required > 7) set('summary-required-grade', 'No alcanzable');
+    else if (required < 2) set('summary-required-grade', '< 2.00');
+    else set('summary-required-grade', formatGrade(required));
+
+    const statusEl = document.getElementById('summary-status');
+    if (statusEl) { statusEl.textContent = status; statusEl.className = `value calculator-status ${statusClass}`; }
+
+    const progressCompletedEl = document.getElementById('summary-progress-completed');
+    const progressPendingEl = document.getElementById('summary-progress-pending');
+    const progressBarEl = document.getElementById('summary-progress-bar');
+    const progressTrackEl = document.getElementById('summary-progress-track');
+    const boundedCompleted = Math.max(0, Math.min(100, completedWeight));
+    const boundedPending = Math.max(0, Math.min(100, pendingWeight));
+    if (progressCompletedEl) progressCompletedEl.textContent = formatPercent(boundedCompleted);
+    if (progressPendingEl) progressPendingEl.textContent = formatPercent(boundedPending);
+    if (progressBarEl) progressBarEl.style.width = `${boundedCompleted}%`;
+    if (progressTrackEl) {
+        progressTrackEl.setAttribute('aria-valuenow', String(Math.round(boundedCompleted)));
+        progressTrackEl.setAttribute('aria-valuetext', `Ponderacion rendida ${formatPercent(boundedCompleted)}. Ponderacion pendiente ${formatPercent(boundedPending)}.`);
+    }
+    set('summary-advice', advice);
+}
+
+function syncFieldToState(evalId, field, rawValue) {
+    const ev = evaluations.find(e => e.id === evalId);
+    if (!ev) return;
+    if (field === 'name') {
+        ev.name = rawValue;
+    } else if (field === 'grade') {
+        const trimmed = rawValue.trim();
+        ev.grade = trimmed ? (isFinite(parseGrade(trimmed)) ? parseGrade(trimmed) : null) : null;
+    } else if (field === 'weight') {
+        const parsed = parseFloat(rawValue);
+        ev.weight = isFinite(parsed) ? parsed : 0;
+    }
+}
+
+function addEvaluation() {
+    const id = `eval-${evalIdCounter++}`;
+    evaluations.push({ id, name: `Evaluacion ${evaluations.length + 1}`, grade: null, weight: 0 });
+    renderEvaluations();
+    renderSummary();
+    const nameInput = document.getElementById(`name-${id}`);
+    if (nameInput) nameInput.focus();
+}
+
+function removeEvaluation(id) {
+    if (evaluations.length <= 1) return;
+    evaluations = evaluations.filter(e => e.id !== id);
+    renderEvaluations();
+    renderSummary();
+}
+
+function resetCalculator() {
+    evaluations = DEFAULT_EVALUATIONS.map(e => ({ ...e }));
+    evalIdCounter = DEFAULT_EVALUATIONS.length + 1;
+    const minInput = document.getElementById('minimum_grade');
+    if (minInput) minInput.value = '4.0';
+    clearValidationError();
+    renderEvaluations();
+    renderSummary();
+}
+
+function validateAll() {
+    const allErrors = [];
+    evaluations.forEach(ev => validateEvaluation(ev).forEach(e => allErrors.push(e)));
+    const weightError = validateWeights(evaluations);
+    if (weightError) allErrors.push(weightError);
+    const minGrade = parseGrade(document.getElementById('minimum_grade')?.value);
+    const minInvalid = minGrade === null || !isFinite(minGrade) || minGrade < 2 || minGrade > 7;
+    setFieldInvalid(document.getElementById('minimum_grade'), minInvalid);
+    if (minInvalid) allErrors.push('La nota minima de aprobacion debe estar entre 2.0 y 7.0.');
+    return allErrors;
 }
 
 function debounce(fn, delay) {
@@ -14,409 +287,47 @@ function debounce(fn, delay) {
     };
 }
 
-function formatGrade(value) {
-    return Number.isFinite(value) ? value.toFixed(2) : '—';
+const debouncedRefresh = debounce(() => { updateWeightTotal(); renderSummary(); }, 250);
+
+function handleFormInput(event) {
+    const target = event.target;
+    if (!target) return;
+    const evalId = target.dataset.evalId;
+    const field = target.dataset.field;
+    if (evalId && field) { syncFieldToState(evalId, field, target.value); debouncedRefresh(); return; }
+    if (target.id === 'minimum_grade') debouncedRefresh();
 }
 
-function setFieldInvalid(input, invalid) {
-    if (!input) return;
-    input.classList.toggle('is-invalid', !!invalid);
-    input.setAttribute('aria-invalid', invalid ? 'true' : 'false');
-}
-
-function focusFirstInvalidField() {
-    const firstInvalid = document.querySelector('#calculator-form .is-invalid');
-    if (firstInvalid) {
-        firstInvalid.focus();
-    }
-}
-
-function clearValidationErrors() {
-    const alert = document.getElementById('calculator-error');
-    if (alert) {
-        alert.hidden = true;
-        alert.textContent = '';
-    }
-
-    document.querySelectorAll('#calculator-form .is-invalid').forEach((element) => {
-        setFieldInvalid(element, false);
-    });
-}
-
-function showValidationError(message) {
-    const alert = document.getElementById('calculator-error');
-    if (!alert) return;
-
-    alert.hidden = false;
-    alert.textContent = message;
-    alert.focus();
-}
-
-function getSoftWarningMessage(details) {
-    if (details.invalidPartials) {
-        return 'Revisa tus notas parciales. Deben estar entre 2.0 y 7.0.';
-    }
-    if (details.invalidExam) {
-        return 'La nota del examen debe estar entre 2.0 y 7.0.';
-    }
-    if (details.invalidWeights) {
-        return 'La configuración de ponderaciones debe sumar 100 y mantenerse en rangos válidos.';
-    }
-    if (details.invalidMinimumGrade) {
-        return 'La nota mínima de aprobación debe estar entre 2.0 y 7.0.';
-    }
-    return 'Completa o corrige los datos para obtener una simulación precisa.';
-}
-
-function calculateAverage(notes) {
-    if (!Array.isArray(notes) || !notes.length) return null;
-    const sum = notes.reduce((acc, note) => acc + note, 0);
-    return sum / notes.length;
-}
-
-function calculateFinalGrade(partialAverage, examGrade, partialWeight, examWeight) {
-    if (!Number.isFinite(partialAverage) || !Number.isFinite(examGrade)) return null;
-    return partialAverage * (partialWeight / 100) + examGrade * (examWeight / 100);
-}
-
-function calculateRequiredExamGrade(partialAverage, partialWeight, examWeight, minimumGrade) {
-    if (!Number.isFinite(partialAverage) || !Number.isFinite(minimumGrade)) return null;
-    if (examWeight === 0) {
-        return partialAverage >= minimumGrade ? 2.0 : Infinity;
-    }
-
-    return (minimumGrade - partialAverage * (partialWeight / 100)) / (examWeight / 100);
-}
-
-function getStatusClass(status) {
-    if (status === 'Pendiente') return 'result-status--pending';
-    if (status === 'Aprobado') return 'result-status--success';
-    if (status === 'En riesgo') return 'result-status--warning';
-    return 'result-status--danger';
-}
-
-function getStatus(result) {
-    if (result.status) {
-        return result.status;
-    }
-    if (result.finalGrade !== null) {
-        if (result.finalGrade >= result.minimumGrade) {
-            return 'Aprobado';
-        }
-        return result.requiredExamGrade !== null && result.requiredExamGrade <= 7 ? 'En riesgo' : 'Reprobado';
-    }
-
-    if (result.requiredExamGrade !== null && result.requiredExamGrade <= 2) {
-        return 'Aprobado';
-    }
-    if (result.requiredExamGrade !== null && result.requiredExamGrade <= 7) {
-        return 'En riesgo';
-    }
-    return 'Reprobado';
-}
-
-function getAdvice(status) {
-    if (status === 'Pendiente') {
-        return 'Completa tus notas para obtener una recomendación.';
-    }
-    if (status === 'Aprobado') {
-        return 'Vas bien. Mantén el ritmo y refuerza los contenidos principales.';
-    }
-    if (status === 'En riesgo') {
-        return 'Estás cerca. Prioriza los temas con mayor dificultad antes del examen.';
-    }
-    return 'Necesitas reforzar contenidos y simular una nueva estrategia de estudio.';
-}
-
-function renderResult(result) {
-    const averageOutput = document.getElementById('promedio');
-    const finalOutput = document.getElementById('nota_final');
-    const summaryAverage = document.getElementById('summary-average');
-    const summaryFinal = document.getElementById('summary-final-grade');
-    const summaryRequired = document.getElementById('summary-required-grade');
-    const summaryStatus = document.getElementById('summary-status');
-    const summaryAdvice = document.getElementById('summary-advice');
-
-    const status = getStatus(result);
-    const advice = result.advice || getAdvice(status);
-    const requiredLabel = result.requiredLabel || (result.requiredExamGrade === Infinity
-        ? 'No alcanzable'
-        : formatGrade(result.requiredExamGrade));
-    const finalLabel = result.finalLabel || (result.finalGrade === null ? 'Pendiente' : formatGrade(result.finalGrade));
-
-    if (averageOutput) averageOutput.value = formatGrade(result.partialAverage);
-    if (finalOutput) finalOutput.value = result.finalGrade === null ? '' : formatGrade(result.finalGrade);
-    if (summaryAverage) summaryAverage.textContent = formatGrade(result.partialAverage);
-    if (summaryFinal) summaryFinal.textContent = finalLabel;
-    if (summaryRequired) summaryRequired.textContent = requiredLabel;
-    if (summaryStatus) {
-        summaryStatus.textContent = status;
-        summaryStatus.className = `value ${getStatusClass(status)}`;
-    }
-    if (summaryAdvice) summaryAdvice.textContent = advice;
-}
-
-function evaluateCalculatorState(options = {}) {
-    const { strict = false } = options;
-    const partialWeightInput = document.getElementById('partial_weight');
-    const examWeightInput = document.getElementById('exam_weight');
-    const minimumGradeInput = document.getElementById('minimum_grade');
-    const examInput = document.getElementById('nota_examen');
-    const noteInputs = Array.from(document.querySelectorAll('.note-input'));
-
-    const details = {
-        hasEmptyPartials: false,
-        invalidPartials: false,
-        invalidExam: false,
-        invalidWeights: false,
-        invalidMinimumGrade: false,
-    };
-
-    const notes = [];
-    noteInputs.forEach((input) => {
-        const rawValue = input.value.trim();
-        const parsed = parseGradeValue(rawValue);
-        const empty = rawValue === '';
-        const valid = Number.isFinite(parsed) && parsed >= 2 && parsed <= 7;
-
-        if (empty) {
-            details.hasEmptyPartials = true;
-            setFieldInvalid(input, strict);
-            return;
-        }
-
-        if (!valid) {
-            details.invalidPartials = true;
-            setFieldInvalid(input, strict);
-            return;
-        }
-
-        setFieldInvalid(input, false);
-        notes.push(parsed);
-    });
-
-    const partialWeight = parseGradeValue(partialWeightInput?.value);
-    const examWeight = parseGradeValue(examWeightInput?.value);
-    const minimumGrade = parseGradeValue(minimumGradeInput?.value);
-    const examRawValue = examInput?.value.trim() || '';
-    const examGrade = parseGradeValue(examRawValue);
-    const examFilled = examRawValue !== '';
-
-    const weightsInRange = Number.isFinite(partialWeight) && Number.isFinite(examWeight)
-        && partialWeight >= 0 && partialWeight <= 100
-        && examWeight >= 0 && examWeight <= 100;
-    details.invalidWeights = !weightsInRange || partialWeight + examWeight !== 100;
-    setFieldInvalid(partialWeightInput, strict && details.invalidWeights);
-    setFieldInvalid(examWeightInput, strict && details.invalidWeights);
-
-    details.invalidMinimumGrade = !(Number.isFinite(minimumGrade) && minimumGrade >= 2 && minimumGrade <= 7);
-    setFieldInvalid(minimumGradeInput, strict && details.invalidMinimumGrade);
-
-    details.invalidExam = examFilled && !(Number.isFinite(examGrade) && examGrade >= 2 && examGrade <= 7);
-    setFieldInvalid(examInput, strict && details.invalidExam);
-
-    if (strict) {
-        if (details.invalidPartials || details.hasEmptyPartials) {
-            throw new Error('Cada nota parcial debe estar entre 2.0 y 7.0 y no puede quedar vacía.');
-        }
-        if (details.invalidWeights) {
-            throw new Error('La suma de los pesos debe ser exactamente 100 y cada peso debe estar entre 0 y 100.');
-        }
-        if (details.invalidMinimumGrade) {
-            throw new Error('La nota mínima de aprobación debe estar entre 2.0 y 7.0.');
-        }
-        if (details.invalidExam) {
-            throw new Error('La nota del examen debe estar entre 2.0 y 7.0.');
-        }
-    }
-
-    if (!strict && (details.invalidPartials || details.invalidExam || details.invalidWeights || details.invalidMinimumGrade)) {
-        return {
-            partialAverage: notes.length ? calculateAverage(notes) : null,
-            finalGrade: null,
-            requiredExamGrade: null,
-            minimumGrade: Number.isFinite(minimumGrade) ? minimumGrade : 4,
-            status: 'En riesgo',
-            finalLabel: 'Advertencia',
-            requiredLabel: 'Revisar datos',
-            advice: getSoftWarningMessage(details),
-        };
-    }
-
-    if (!notes.length || details.hasEmptyPartials || !Number.isFinite(partialWeight) || !Number.isFinite(examWeight) || !Number.isFinite(minimumGrade)) {
-        return {
-            partialAverage: notes.length ? calculateAverage(notes) : null,
-            finalGrade: null,
-            requiredExamGrade: null,
-            minimumGrade: Number.isFinite(minimumGrade) ? minimumGrade : 4,
-            status: 'Pendiente',
-            finalLabel: 'Pendiente',
-            requiredLabel: 'Pendiente',
-            advice: getAdvice('Pendiente'),
-        };
-    }
-
-    const partialAverage = calculateAverage(notes);
-    const finalGrade = examFilled ? calculateFinalGrade(partialAverage, examGrade, partialWeight, examWeight) : null;
-    const requiredExamGrade = calculateRequiredExamGrade(partialAverage, partialWeight, examWeight, minimumGrade);
-
-    return {
-        partialAverage,
-        finalGrade,
-        requiredExamGrade,
-        minimumGrade,
-    };
-}
-
-function refreshLiveSummary() {
-    clearValidationErrors();
-    const result = evaluateCalculatorState({ strict: false });
-    renderResult(result);
-}
-
-const refreshLiveSummaryDebounced = debounce(refreshLiveSummary, 250);
-
-function clearCalculator() {
-    clearValidationErrors();
-
-    document.querySelectorAll('.note-input').forEach((input, index) => {
-        input.value = '';
-        const wrapper = input.closest('.calculator-note-group');
-        if (index > 1 && wrapper) {
-            wrapper.remove();
-        }
-    });
-
-    const examInput = document.getElementById('nota_examen');
-    const partialWeightInput = document.getElementById('partial_weight');
-    const examWeightInput = document.getElementById('exam_weight');
-    const minimumGradeInput = document.getElementById('minimum_grade');
-    const averageOutput = document.getElementById('promedio');
-    const finalOutput = document.getElementById('nota_final');
-    const summaryAverage = document.getElementById('summary-average');
-    const summaryFinal = document.getElementById('summary-final-grade');
-    const summaryRequired = document.getElementById('summary-required-grade');
-    const summaryStatus = document.getElementById('summary-status');
-    const summaryAdvice = document.getElementById('summary-advice');
-
-    if (examInput) examInput.value = '';
-    if (partialWeightInput) partialWeightInput.value = '60';
-    if (examWeightInput) examWeightInput.value = '40';
-    if (minimumGradeInput) minimumGradeInput.value = '4.0';
-    if (averageOutput) averageOutput.value = '';
-    if (finalOutput) finalOutput.value = '';
-    if (summaryAverage) summaryAverage.textContent = '—';
-    if (summaryFinal) summaryFinal.textContent = '—';
-    if (summaryRequired) summaryRequired.textContent = '—';
-    if (summaryStatus) {
-        summaryStatus.textContent = 'Pendiente';
-        summaryStatus.className = 'value result-status--pending';
-    }
-    if (summaryAdvice) {
-        summaryAdvice.textContent = 'Completa tus notas para obtener una recomendación.';
-    }
-}
-
-function createNoteField(index) {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'mb-3 calculator-note-group';
-
-    const label = document.createElement('label');
-    const input = document.createElement('input');
-
-    input.type = 'number';
-    input.className = 'form-control note-input';
-    input.id = `nota${index}`;
-    input.name = `nota${index}`;
-    input.min = '2';
-    input.max = '7';
-    input.step = '0.1';
-    input.inputMode = 'decimal';
-    input.required = true;
-
-    label.className = 'form-label';
-    label.setAttribute('for', input.id);
-    label.textContent = `Nota ${index}`;
-
-    wrapper.appendChild(label);
-    wrapper.appendChild(input);
-
-    return wrapper;
+function handleRemoveClick(event) {
+    const btn = event.target.closest('.evaluation-remove');
+    if (!btn) return;
+    const evalId = btn.dataset.evalId;
+    if (evalId) removeEvaluation(evalId);
 }
 
 function handleSubmit(event) {
     event.preventDefault();
-    clearValidationErrors();
-
-    try {
-        const result = evaluateCalculatorState({ strict: true });
-        renderResult(result);
-    } catch (error) {
-        showValidationError(error.message || 'Revisa los datos ingresados.');
-        focusFirstInvalidField();
-    }
-}
-
-function addNote() {
-    clearValidationErrors();
-    const container = document.querySelector('.additional-notes');
-    if (!container) return;
-
-    const nextIndex = container.querySelectorAll('.note-input').length + 1;
-    container.appendChild(createNoteField(nextIndex));
-    refreshLiveSummaryDebounced();
-}
-
-function removeLastNote() {
-    clearValidationErrors();
-    const groups = Array.from(document.querySelectorAll('.additional-notes .calculator-note-group'));
-    if (groups.length <= 2) {
-        showValidationError('Debes mantener al menos las dos notas base.');
-        return;
-    }
-
-    groups[groups.length - 1].remove();
-    refreshLiveSummaryDebounced();
-}
-
-function handleRealtimeInput(event) {
-    const target = event.target;
-    if (!target) return;
-
-    const shouldRefresh = target.classList.contains('note-input')
-        || ['nota_examen', 'partial_weight', 'exam_weight', 'minimum_grade'].includes(target.id);
-
-    if (!shouldRefresh) return;
-    refreshLiveSummaryDebounced();
+    clearValidationError();
+    const errors = validateAll();
+    if (errors.length) { showValidationError(errors[0]); focusFirstInvalidField(); return; }
+    renderSummary();
 }
 
 function initCalculator() {
     const form = document.getElementById('calculator-form');
-    const addNoteButton = document.getElementById('add-note-btn');
-    const deleteNoteButton = document.getElementById('delete-note');
-    const clearButton = document.getElementById('clear-calculator-btn');
+    const addBtn = document.getElementById('add-eval-btn');
+    const clearBtn = document.getElementById('clear-calculator-btn');
     const errorAlert = document.getElementById('calculator-error');
-
-    if (errorAlert) {
-        errorAlert.setAttribute('tabindex', '-1');
-    }
-
+    if (errorAlert) errorAlert.setAttribute('tabindex', '-1');
     if (form) {
         form.addEventListener('submit', handleSubmit);
-        form.addEventListener('input', handleRealtimeInput);
-        form.addEventListener('change', handleRealtimeInput);
+        form.addEventListener('input', handleFormInput);
+        form.addEventListener('change', handleFormInput);
+        form.addEventListener('click', handleRemoveClick);
     }
-    if (addNoteButton) {
-        addNoteButton.addEventListener('click', addNote);
-    }
-    if (deleteNoteButton) {
-        deleteNoteButton.addEventListener('click', removeLastNote);
-    }
-    if (clearButton) {
-        clearButton.addEventListener('click', clearCalculator);
-    }
-
-    refreshLiveSummary();
+    if (addBtn) addBtn.addEventListener('click', addEvaluation);
+    if (clearBtn) clearBtn.addEventListener('click', resetCalculator);
+    resetCalculator();
 }
 
 document.addEventListener('DOMContentLoaded', initCalculator);
