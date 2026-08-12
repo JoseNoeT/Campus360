@@ -1,0 +1,132 @@
+/* Campus360 footer component */
+
+.site-footer {
+    background: color-mix(in srgb, var(--color-surface) 82%, var(--color-bg) 18%);
+    border-top: 1px solid var(--color-border);
+    color: var(--color-text);
+    padding: 2.1rem 0 1rem;
+}
+
+.site-footer .footer-grid {
+    display: grid;
+    gap: 1.15rem;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    padding-bottom: 1.3rem;
+}
+
+.site-footer .footer-brand {
+    max-width: 42ch;
+}
+
+.site-footer .footer-title {
+    margin: 0 0 0.6rem;
+    font-size: var(--text-base);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: color-mix(in srgb, var(--color-text) 88%, var(--color-surface) 12%);
+}
+
+.site-footer .footer-brand .footer-title {
+    font-size: var(--text-xl);
+    letter-spacing: -0.01em;
+}
+
+.site-footer .footer-brand p {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+}
+
+.site-footer .footer-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.45rem;
+}
+
+.site-footer .footer-links a {
+    color: color-mix(in srgb, var(--color-text) 92%, var(--color-surface) 8%);
+    font-size: var(--text-sm);
+    text-decoration: none;
+}
+
+.site-footer .footer-links a:hover,
+.site-footer .footer-links a:focus-visible {
+    color: var(--color-primary-light);
+    text-decoration: underline;
+    text-underline-offset: 0.18rem;
+}
+
+.site-footer .footer-links a:focus-visible,
+.site-footer .footer-bottom a:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: 0.2rem;
+}
+
+.site-footer .footer-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+}
+
+.site-footer .footer-badge {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid color-mix(in srgb, var(--color-border) 86%, var(--color-surface) 14%);
+    background: color-mix(in srgb, var(--color-surface-2) 86%, var(--color-bg) 14%);
+    color: color-mix(in srgb, var(--color-text) 94%, var(--color-surface) 6%);
+    border-radius: 999px;
+    padding: 0.3rem 0.6rem;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+.site-footer .footer-bottom {
+    border-top: 1px solid color-mix(in srgb, var(--color-border) 80%, var(--color-surface) 20%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.9rem;
+    padding-top: 0.85rem;
+}
+
+.site-footer .footer-bottom p {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+}
+
+@media (max-width: 991px) {
+    .site-footer .footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .site-footer .footer-brand {
+        max-width: 100%;
+    }
+
+    .site-footer .footer-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 640px) {
+    .site-footer {
+        padding: 1.8rem 0 1rem;
+    }
+
+    .site-footer .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+[data-theme="dark"] .site-footer {
+    background: color-mix(in srgb, var(--color-surface) 86%, var(--color-bg) 14%);
+}

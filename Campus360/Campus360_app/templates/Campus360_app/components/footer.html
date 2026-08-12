@@ -1,6 +1,45 @@
-<footer class="site-footer py-4 mt-5">
-    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
-        <p class="mb-0">Campus360 © 2026</p>
-        <small class="text-muted">Plataforma educativa y catálogo académico</small>
+<footer class="site-footer mt-5" role="contentinfo" aria-label="Pie de sitio Campus360">
+    <div class="container">
+        <div class="footer-grid" aria-label="Resumen del proyecto Campus360">
+            <section class="footer-brand" aria-label="Marca del proyecto">
+                <h2 class="footer-title">Campus360</h2>
+                <p class="mb-0">Plataforma educativa fullstack orientada a la exploración académica, el catálogo de libros, las herramientas estudiantiles y la gestión del perfil.</p>
+            </section>
+
+            <nav aria-label="Modulos principales">
+                <h3 class="footer-title">Módulos</h3>
+                <ul class="footer-links" role="list">
+                    <li><a href="{% url 'index' %}">Inicio</a></li>
+                    <li><a href="{% url 'biblioteca360' %}">Biblioteca360</a></li>
+                    <li><a href="{% url 'venta_libro' %}">Catálogo</a></li>
+                    <li><a href="{% url 'calculo_nota' %}">Calculadora</a></li>
+                    <li><a href="{% url 'perfil' %}">Perfil</a></li>
+                </ul>
+            </nav>
+
+            <section aria-label="Arquitectura del proyecto">
+                <h3 class="footer-title">Proyecto</h3>
+                <div class="footer-badges" role="list" aria-label="Pilares técnicos">
+                    <span class="footer-badge" role="listitem">Django + DRF</span>
+                    <span class="footer-badge" role="listitem">Frontend modular</span>
+                    <span class="footer-badge" role="listitem">API REST</span>
+                </div>
+            </section>
+
+            <nav aria-label="Accesos rapidos">
+                <h3 class="footer-title">Accesos rápidos</h3>
+                <ul class="footer-links" role="list">
+                    <li><a href="{% url 'venta_libro' %}">Explorar catálogo</a></li>
+                    <li><a href="{% url 'biblioteca360' %}">Buscar referencias</a></li>
+                    <li><a href="{% url 'calculo_nota' %}">Simular notas</a></li>
+                    <li><a href="{% url 'perfil' %}">Revisar perfil</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="footer-bottom" aria-label="Resumen final de proyecto">
+            <p class="mb-0">Campus360 © 2026 · Proyecto académico fullstack desarrollado con Django</p>
+            <p class="mb-0">Código y documentación preparados para una presentación clara del proyecto.</p>
+        </div>
     </div>
 </footer>

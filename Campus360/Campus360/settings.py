@@ -8,7 +8,8 @@ STATIC_DIR = os.path.join(BASE_DIR, 'Campus360_app', 'static')
 MEDIA_DIR = os.path.join(BASE_DIR, 'media')
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'Campus360_app', 'templates', 'Campus360_app')
 
-SECRET_KEY = 'django-insecure-rpy+if12c@uui81f!d-@bc7jd+l_p%ai73-gpj+rm_j3zixd08'
+# Local development fallback only; set SECRET_KEY in the environment for real deployments.
+SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-only-insecure-secret-key-for-local-development')
 
 DEBUG = True
 

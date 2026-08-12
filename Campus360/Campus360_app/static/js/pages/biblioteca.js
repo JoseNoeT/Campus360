@@ -11,12 +11,18 @@ const resultsState = document.querySelector('#list-output .biblioteca-state');
 const resultsGrid = document.querySelector('#list-output .row');
 const quickSearchButtons = Array.from(document.querySelectorAll('.biblioteca-chip'));
 const announcer = document.getElementById('biblioteca-announcer');
+const resultsTitle = document.getElementById('biblioteca-results-title');
 const catalogBaseUrl = document.getElementById('list-output')?.dataset.catalogUrl || '/venta-libro/';
 
 function announce(message) {
     if (announcer) {
         announcer.textContent = message;
     }
+}
+
+function updateResultsTitle(query = '') {
+    if (!resultsTitle) return;
+    resultsTitle.textContent = query ? `Resultados para “${query}”` : 'Resultados';
 }
 
 function setStateMarkup(markup = '') {
@@ -37,6 +43,7 @@ function clearResults() {
 
 function renderInitialState() {
     clearResults();
+    updateResultsTitle('');
     setStateMarkup(`
         <div class="biblioteca-state-card" role="status" aria-live="polite">
             <h3 class="h5 mb-2">Empieza buscando un tema académico.</h3>
@@ -54,6 +61,7 @@ function renderInitialState() {
 
 function renderFriendlyEmpty(query) {
     clearResults();
+    updateResultsTitle(query);
     setStateMarkup(`
         <div class="biblioteca-state-card" role="status" aria-live="polite">
             <h3 class="h5 mb-2">No encontramos referencias para “${escapeHtml(query)}”.</h3>
@@ -72,10 +80,14 @@ function renderFallbackMessage() {
 }
 
 function getSourceLabel(source) {
-    if (source === 'openlibrary') return 'Fuente externa';
+    if (source === 'openlibrary') return 'Fuente: Open Library';
     if (source === 'local_recommended') return 'Recomendación local';
     if (source === 'local') return 'Referencia local';
     return 'Referencia';
+}
+
+function getPlaceholderCover() {
+    return '/static/img/book-placeholder.svg';
 }
 
 function getYearLabel(publishedDate) {
@@ -97,7 +109,7 @@ function createResultCard(item, source) {
     const title = info.title || 'Sin título';
     const authors = (info.authors || ['Autor desconocido']).join(', ');
     const year = getYearLabel(info.publishedDate);
-    const cover = info.imageLinks?.thumbnail || 'https://via.placeholder.com/320x420?text=Sin+portada';
+    const cover = info.imageLinks?.thumbnail || getPlaceholderCover();
     const previewUrl = info.previewLink || '#';
     const sourceLabel = getSourceLabel(source);
     const hasPreview = previewUrl && previewUrl !== '#';
@@ -113,7 +125,8 @@ function createResultCard(item, source) {
                     class="biblioteca-result-card__cover"
                     loading="lazy"
                     width="320"
-                    height="420">
+                    height="420"
+                    onerror="this.src='${escapeAttr(getPlaceholderCover())}'">
             </div>
             <div class="biblioteca-result-card__body">
                 <div class="biblioteca-result-card__meta">
@@ -168,6 +181,7 @@ async function handleSearch(forcedQuery = null) {
     }
 
     searchInput.value = query;
+    updateResultsTitle(query);
     setResultsBusy('Buscando referencias académicas…');
 
     try {

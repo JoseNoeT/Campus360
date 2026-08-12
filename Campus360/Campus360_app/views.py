@@ -248,16 +248,19 @@ def lista_libros(request):
         libros = Libro.objects.all()  # Recupera todos los libros
         libros_lista = list(libros.values('isbn', 'titulo', 'autor', 'editorial', 'anio', 'genero', 'precio', 'stock', 'imagen'))  # Usa 'isbn' como identificador
         return JsonResponse(libros_lista, safe=False)
-    
+
     elif request.method == 'POST':
+        if not request.user.is_authenticated or not (request.user.is_staff or request.user.is_superuser):
+            return JsonResponse({'detail': 'No tienes permisos para crear libros.'}, status=403)
+
         # Procesar datos para crear un nuevo libro
         titulo = request.data.get('titulo')
         autor = request.data.get('autor')
         editorial = request.data.get('editorial')
-        
+
         # Validar y guardar el nuevo libro
         nuevo_libro = Libro.objects.create(titulo=titulo, autor=autor, editorial=editorial)
-        
+
         # Devolver una respuesta con el libro creado
         return JsonResponse({'mensaje': 'Libro creado correctamente', 'libro': {
             'id': nuevo_libro.id,
@@ -265,7 +268,7 @@ def lista_libros(request):
             'autor': nuevo_libro.autor,
             'editorial': nuevo_libro.editorial
         }}, status=201)  # Status 201 indica creación exitosa
-    
+
     else:
         return JsonResponse({'error': 'Método no permitido'}, status=405)
 
